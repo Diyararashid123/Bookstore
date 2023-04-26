@@ -1,7 +1,7 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
-const bookRoutes = require('./Routes/bookRoutes'); // Import the bookRoutes
+const bookRoutes = require('./Routes/bookRoutes.js'); // Import the bookRoutes
 
 const port = 3000;
 const app = express();

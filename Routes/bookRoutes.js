@@ -7,7 +7,7 @@ const {
   createBook,
   updateBook,
   deleteBook
-} = require('../controllers/bookController'); // Adjust the path based on your project structure
+} = require('../controllers/bookController.js'); // Adjust the path based on your project structure
 
 const router = express.Router();
 
