@@ -1,6 +1,6 @@
 // bookRoutes.js
 const express = require('express');
-
+const cors = require('cors');
 const {
   getAllBooks,
   getBookById,
@@ -10,7 +10,7 @@ const {
 } = require('../Controllers/bookcontroller.js'); // Adjust the path based on your project structure
 
 const router = express.Router();
-
+router.use(cors());
 // Book-related routes
 router.get('/books', getAllBooks);
 router.get('/book/:id', getBookById);
