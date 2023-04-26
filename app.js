@@ -13,7 +13,14 @@ const prisma = new PrismaClient({
   },
 });
 
-app.use(cors());
+const corsOptions = {
+  origin: '*', // Or specify the allowed domains, for example: ['http://localhost:3001', 'https://yourdomain.com']
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 
 app.use(bookRoutes);
 
