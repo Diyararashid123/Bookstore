@@ -204,8 +204,31 @@
     }
   };
 
+  const updateCartItem = async (req, res) => {
+    const { id, quantity } = req.body;
+    try {
+      const updatedCartItem = await prisma.cart.update({
+        where: { id: parseInt(id) },
+        data: { quantity },
+      });
+      res.status(200).json(updatedCartItem);
+    } catch (error) {
+      res.status(500).json({ error: 'Error updating book quantity in cart' });
+    }
+  };
 
-
+  const getCartByUserId = async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const cartItems = await prisma.cart.findMany({
+        where: { userId: parseInt(userId) },
+        include: { book: true },
+      });
+      res.status(200).json(cartItems);
+    } catch (error) {
+      res.status(500).json({ error: 'Error fetching cart items' });
+    }
+  };
   
   const searchBooks = async (req, res) => {
     const { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
@@ -250,5 +273,5 @@
   
   
 
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, createUser, loginUser, deleteUser, buyBook, addToWishlist, getWishlistByUserId,  removeFromWishlist, addToCart, removeFromCart, searchBooks};
+  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, createUser, loginUser, deleteUser, buyBook, addToWishlist, getWishlistByUserId,  removeFromWishlist, addToCart, removeFromCart, searchBooks, updateCartItem, getCartByUserId};
 
