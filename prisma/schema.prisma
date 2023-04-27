@@ -24,7 +24,9 @@ model User {
   email   String    @unique
   name    String?
   posts   Post[]
-  orders  Order[]   // Make sure the field name starts with a lowercase letter
+  orders  Order[]   
+  balance   Float     @default(0)
+  purchases Purchase[]
 }
 
 model Book {
@@ -36,8 +38,17 @@ model Book {
   authorId    Int
   category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
+  purchases   Purchase[]
 }
 
+model Purchase {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  bookId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  book    Book  @relation(fields: [bookId], references: [id])
+  // other fields if any, like purchaseDate
+}
 model Author {
   id    Int     @id @default(autoincrement())
   name  String
