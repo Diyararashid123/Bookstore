@@ -1,8 +1,11 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
-const bookRoutes = require('./Routes/bookRoutes.js'); // Import the bookRoutes
+const bookRoutes = require('./Routes/bookRoutes.js');
 const userRoutes = require('./Routes/userRoutes.js');
+const cartRoutes = require('./Routes/cartRoutes.js');
+const wishlistRoutes = require('./Routes/wishlistRoutes.js');
+
 const port = 3000;
 const app = express();
 const prisma = new PrismaClient({
@@ -21,9 +24,11 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.json()); 
+app.use(express.json());
 app.use(bookRoutes);
 app.use(userRoutes);
+app.use(cartRoutes);
+app.use(wishlistRoutes);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

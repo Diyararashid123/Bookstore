@@ -27,6 +27,9 @@ model User {
   orders  Order[]   
   balance   Float     @default(0)
   purchases Purchase[]
+  reviews     Review[]
+  wishlists Wishlist[] 
+  carts     Cart[]     
 }
 
 model Book {
@@ -39,6 +42,9 @@ model Book {
   category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
   purchases   Purchase[]
+  reviews     Review[]
+  wishlists Wishlist[]  
+  carts     Cart[]  
 }
 
 model Purchase {
@@ -74,6 +80,34 @@ model OrderItem {
   order   Order @relation(fields: [orderId], references: [id])
   orderId Int
   bookId  Int
+  quantity Int
+}
+
+model Review {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  bookId    Int
+  user      User      @relation(fields: [userId], references: [id])
+  book      Book      @relation(fields: [bookId], references: [id])
+  rating    Float
+  comment   String?
+  createdAt DateTime  @default(now())
+}
+
+model Wishlist {
+  id      Int       @id @default(autoincrement())
+  userId  Int
+  user    User      @relation(fields: [userId], references: [id])
+  bookId  Int
+  book    Book      @relation(fields: [bookId], references: [id])
+}
+
+model Cart {
+  id      Int       @id @default(autoincrement())
+  userId  Int
+  user    User      @relation(fields: [userId], references: [id])
+  bookId  Int
+  book    Book      @relation(fields: [bookId], references: [id])
   quantity Int
 }
 
