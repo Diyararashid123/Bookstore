@@ -4,7 +4,7 @@ const {
   getWishlistByUserId,
   removeFromWishlist,
   addToWishlist,
-} = require('../Controllers/bookcontroller.js'); // Adjust the path
+} = require('../Controllers/wishCotroller.js'); // Adjust the path
 
 const router = express.Router();
 router.get("/book/getWishlist/:id", getWishlistByUserId);

@@ -108,6 +108,22 @@
     }
   };
 
+  const getUser = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "USER ID DOES NOT EXIST" });
+    }
+  };
+
+
+
   const buyBook = async (req, res) => {
     const { userId, bookId } = req.body;
     try {
@@ -231,6 +247,7 @@
       res.status(500).json({ error: 'Error fetching cart items' });
     }
   };
+  
   /*
   const searchBooks = async (req, res) => {
     const { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;

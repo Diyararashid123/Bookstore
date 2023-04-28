@@ -3,7 +3,8 @@ const {
   createUser,
   loginUser,
   deleteUser,
-} = require('../Controllers/bookcontroller.js'); // Adjust the path 
+  getUser
+} = require('../Controllers/userController.js'); // Adjust the path 
 
 const router = express.Router();
 
@@ -11,5 +12,5 @@ const router = express.Router();
 router.post('/user/signup', createUser);
 router.post('/user/login', loginUser);
 router.delete('/user/delete/:id', deleteUser);
-
+app.get('/users/:id', getUser);
 module.exports = router;

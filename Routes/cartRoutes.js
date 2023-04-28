@@ -2,7 +2,7 @@ const express = require('express');
 const{
   removeFromCart,
   addToCart
-}= require('../Controllers/bookcontroller.js'); // Adjust the path
+}= require('../Controllers/cartController.js'); // Adjust the path
 
 
 const router = express.Router();
