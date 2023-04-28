@@ -79,8 +79,8 @@
       });
       res.status(201).json(newUser);
     } catch (error) {
-      console.log(error); // Add this line to log the error
-      res.status(400).json({ error: error.message }); // Change this line to display the actual error message
+      console.log(error); 
+      res.status(400).json({ error: error.message }); 
     }
   };
 
