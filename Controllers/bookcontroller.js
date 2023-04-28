@@ -229,7 +229,7 @@
       res.status(500).json({ error: 'Error fetching cart items' });
     }
   };
-  
+  /*
   const searchBooks = async (req, res) => {
     const { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
   
@@ -271,7 +271,7 @@
     }
   };
   
-  
+  */
 
   module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, createUser, loginUser, deleteUser, buyBook, addToWishlist, getWishlistByUserId,  removeFromWishlist, addToCart, removeFromCart, searchBooks, updateCartItem, getCartByUserId};
 

@@ -7,7 +7,6 @@
     updateBook,
     deleteBook,
     buyBook,
-    searchBooks,
     getCartByUserId,
     updateCartItem
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
@@ -17,7 +16,6 @@
   // Book-related routes
   router.get('/books', getAllBooks);
   router.get('/book/:id', getBookById);
-  router.get('/book/search', searchBooks); 
   router.post('/book/buy', buyBook);
   router.post('/book/create', createBook);
   router.put('/book/update/:id', updateBook);
