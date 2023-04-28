@@ -72,6 +72,7 @@
 
   const createUser = async (req, res) => {
     const { username, password } = req.body;
+    console.log("Username:", username, "Password:", password);
     try {
       const newUser = await prisma.user.create({
         data: { username, password },
