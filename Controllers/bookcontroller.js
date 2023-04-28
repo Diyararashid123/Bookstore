@@ -78,7 +78,8 @@
       });
       res.status(201).json(newUser);
     } catch (error) {
-      res.status(400).json({ error:"YOUU CAN NOT CREATE A NEW ACCOUNT"});
+      console.log(error); // Add this line to log the error
+      res.status(400).json({ error: error.message }); // Change this line to display the actual error message
     }
   };
 
