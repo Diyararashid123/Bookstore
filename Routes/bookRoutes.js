@@ -6,9 +6,7 @@
     createBook,
     updateBook,
     deleteBook,
-    buyBook,
-    getCartByUserId,
-    updateCartItem
+    buyBook
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
@@ -20,7 +18,5 @@
   router.post('/book/create', createBook);
   router.put('/book/update/:id', updateBook);
   router.delete('/book/delete/:id', deleteBook);
-  router.get('/cart/:userId', getCartByUserId);
-  router.put('/cart/updatecartItem/:id', updateCartItem);
   module.exports = router;
  
