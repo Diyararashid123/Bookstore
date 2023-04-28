@@ -273,5 +273,5 @@
   
   */
 
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, createUser, loginUser, deleteUser, buyBook, addToWishlist, getWishlistByUserId,  removeFromWishlist, addToCart, removeFromCart, searchBooks, updateCartItem, getCartByUserId};
+  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, createUser, loginUser, deleteUser, buyBook, addToWishlist, getWishlistByUserId,  removeFromWishlist, addToCart, removeFromCart, updateCartItem, getCartByUserId};
 
