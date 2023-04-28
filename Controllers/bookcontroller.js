@@ -147,5 +147,5 @@
   
   */
 
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook,addToCart, removeFromCart, updateCartItem, getCartByUserId};
+  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook};
 
