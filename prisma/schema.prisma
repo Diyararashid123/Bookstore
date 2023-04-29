@@ -21,9 +21,6 @@ model Post {
 
 model User {
   id      Int       @id @default(autoincrement())
-  username  String    @unique
-  name    String?
-  password String
   posts   Post[]
   orders  Order[]   
   balance   Float     @default(0)
