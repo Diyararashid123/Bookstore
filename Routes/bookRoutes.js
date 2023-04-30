@@ -6,7 +6,8 @@
     createBook,
     updateBook,
     deleteBook,
-    buyBook
+    buyBook,
+    createCategory
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
@@ -18,5 +19,6 @@
   router.post('/book/create', createBook);
   router.put('/book/update/:id', updateBook);
   router.delete('/book/delete/:id', deleteBook);
+  app.post('/category/create', createCategory);
   module.exports = router;
  

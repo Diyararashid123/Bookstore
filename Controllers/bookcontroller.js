@@ -34,7 +34,7 @@
         data: { title, description, price, categoryId },
       });
       res.status(200).json(newBook);
-    }  catch (error) {
+    } catch (error) {
       console.error("Error creating book:", error);
       console.error("Error details:", JSON.stringify(error, null, 2));
       if (error.code === 'P2002') {
@@ -150,6 +150,21 @@
   };
   
   */
-
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook};
+  const createCategory = async (req, res) => {
+    const { name } = req.body;
+    try {
+      const newCategory = await prisma.category.create({
+        data: { name },
+      });
+      res.status(200).json(newCategory);
+    } catch (error) {
+      console.error("Error creating category:", error);
+      if (error.code === 'P2002') {
+        res.status(400).json({ error: 'The category already exists' });
+      } else {
+        res.status(500).json({ error: 'An error occurred while creating the category' });
+      }
+    }
+  };
+  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook, createCategory};
 
