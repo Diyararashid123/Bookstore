@@ -19,6 +19,6 @@
   router.post('/book/create', createBook);
   router.put('/book/update/:id', updateBook);
   router.delete('/book/delete/:id', deleteBook);
-  app.post('/category/create', createCategory);
+  router.post('/category/create', createCategory);
   module.exports = router;
  
