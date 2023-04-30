@@ -34,12 +34,13 @@
         data: { title, description, price, categoryId },
       });
       res.status(200).json(newBook);
-    } catch (error) {
+    }  catch (error) {
       console.error("Error creating book:", error);
+      console.error("Error details:", JSON.stringify(error, null, 2));
       if (error.code === 'P2002') {
         res.status(400).json({ error: 'The book already exists' });
       } else {
-        res.status(500).json({ error: 'An error occurred while creating the book' });
+        res.status(500).json({ error: 'An error occurred while creating the book', details: error });
       }
     }
   };
