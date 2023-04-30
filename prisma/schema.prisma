@@ -35,14 +35,14 @@ model Book {
   title       String
   description String?
   price       Float
-  // author      Author?      @relation(fields: [authorId], references: [id])
-  // authorId    Int?
-  category    Category    @relation(fields: [id], references: [id])
+  category    Category    @relation(fields: [categoryId], references: [id])
+  categoryId  Int
   purchases   Purchase[]
   reviews     Review[]
-  wishlists Wishlist[]  
-  carts     Cart[]  
+  wishlists   Wishlist[]  
+  carts       Cart[]  
 }
+
 
 model Purchase {
   id      Int   @id @default(autoincrement())

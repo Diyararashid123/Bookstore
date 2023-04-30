@@ -28,14 +28,14 @@
 
   const createBook = async (req, res) => {
     console.log("The req quest body is:", req.body);
-    const { title, description, price, category } = req.body;
+    const {title, description, price, categoryId} = req.body;
     try {
       const newBook = await prisma.book.create({
-        data: { title, description, price, category },
+        data: { title, description, price, categoryId },
       });
       res.status(200).json(newBook);
     } catch (error) {
-      console.error("Error creating book:", error); // Add this line to log the error in more detail
+      console.error("Error creating book:", error);
       if (error.code === 'P2002') {
         res.status(400).json({ error: 'The book already exists' });
       } else {
@@ -43,6 +43,7 @@
       }
     }
   };
+  
   
 
   const updateBook = async (req, res) => {
