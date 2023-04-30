@@ -40,7 +40,7 @@
       if (error.code === 'P2002') {
         res.status(400).json({ error: 'The book already exists' });
       } else {
-        res.status(500).json({ error: 'An error occurred while creating the book', details: error });
+        res.status(500).json({ error: error.message, details: error });
       }
     }
   };
