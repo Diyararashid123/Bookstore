@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
@@ -23,13 +24,12 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(bookRoutes);
-app.use(userRoutes);
-app.use(cartRoutes);
-app.use(wishlistRoutes);
+app.use('/api', bookRoutes); // Add /api prefix to bookRoutes
+app.use('/api', userRoutes); // Add /api prefix to userRoutes
+app.use('/api', cartRoutes); // Add /api prefix to cartRoutes
+app.use('/api', wishlistRoutes); // Add /api prefix to wishlistRoutes
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
