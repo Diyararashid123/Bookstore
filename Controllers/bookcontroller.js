@@ -29,6 +29,11 @@
   const createBook = async (req, res) => {
     console.log("The req quest body is:", req.body);
     const {title, description, price, categoryId} = req.body;
+    
+    const category = await prisma.category.findUnique({ where: { id: categoryId } });
+    if (!category) {
+      return res.status(400).json({ error: 'Invalid categoryId provided' });
+    }
     try {
       const newBook = await prisma.book.create({
         data: { title, description, price, categoryId },
