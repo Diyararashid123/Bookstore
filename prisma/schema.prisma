@@ -72,6 +72,11 @@ model Order {
   total    Float
 }
 
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL") + "?statement_cache_size=0"
+}
+
 model OrderItem {
   id      Int   @id @default(autoincrement())
   order   Order @relation(fields: [orderId], references: [id])

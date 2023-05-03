@@ -28,20 +28,32 @@
 
   const createBook = async (req, res) => {
     console.log("The req quest body is:", req.body);
-    const {title, description, price, categoryId} = req.body;
-    
-    const category = await prisma.category.findUnique({ where: { id: categoryId } });
-    if (!category) {
-      return res.status(400).json({ error: 'Invalid categoryId provided' });
-    }
+    const { title, description, price, categoryId } = req.body;
+  
     try {
+      const category = await prisma.category.findUnique({ where: { id: categoryId } });
+      if (!category) {
+        return res.status(400).json({ error: 'Invalid categoryId provided' });
+      }
+  
       const newBook = await prisma.book.create({
-        data: { title, description, price, categoryId },
+        data: {
+          title,
+          description,
+          price,
+          category: {
+            connect: {
+              id: categoryId,
+            },
+          },
+        },
       });
-      res.status(200).json(newBook);
+  
+      res.status(201).json(newBook);
     } catch (error) {
       console.error("Error creating book:", error);
       console.error("Error details:", JSON.stringify(error, null, 2));
+  
       if (error.code === 'P2002') {
         res.status(400).json({ error: 'The book already exists' });
       } else {
@@ -49,6 +61,7 @@
       }
     }
   };
+  
   
   
 
