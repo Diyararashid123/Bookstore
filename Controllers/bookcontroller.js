@@ -110,7 +110,7 @@
     }
   };
 
-  export { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook };
+  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook};
 
   /*
   const searchBooks = async (req, res) => {
