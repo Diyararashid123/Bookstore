@@ -126,6 +126,8 @@
     }
   };
 
+  export { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook };
+
   /*
   const searchBooks = async (req, res) => {
     const { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
@@ -169,5 +171,3 @@
   };
   
   */
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook};
-
