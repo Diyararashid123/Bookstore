@@ -35,8 +35,6 @@ model Book {
   title       String
   description String?
   price       Float
-  category    Category    @relation(fields: [categoryId], references: [id])
-  categoryId  Int
   purchases   Purchase[]
   reviews     Review[]
   wishlists   Wishlist[]  
@@ -58,11 +56,6 @@ model Purchase {
 //   books Book[]
 // }
 
-model Category {
-  id    Int     @id @default(autoincrement())
-  name  String
-  books Book[]
-}
 
 model Order {
   id       Int         @id @default(autoincrement())
