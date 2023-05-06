@@ -30,6 +30,12 @@ model User {
   carts     Cart[]     
 }
 
+model Category{
+id Int  @id @default(autoincrement())
+name String
+book Book[]
+}
+
 model Book {
   id          Int         @id @default(autoincrement())
   title       String
@@ -39,6 +45,8 @@ model Book {
   reviews     Review[]
   wishlists   Wishlist[]  
   carts       Cart[]  
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
 }
 
 
