@@ -35,7 +35,7 @@
           title: title,
           description: description,
           price: price,
-          categories: {
+          category: {
             connect: [
               { id: categories}
             ]
