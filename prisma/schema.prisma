@@ -30,25 +30,33 @@ model User {
   carts     Cart[]     
 }
 
-model Category{
-id Int  @id @default(autoincrement())
-name String
-book Book[]
+model Category {
+  id     Int      @id @default(autoincrement())
+  name   String
+  book   BookCategories[]
 }
 
 model Book {
-  id          Int         @id @default(autoincrement())
-  title       String
-  description String?
-  price       Float
-  purchases   Purchase[]
-  reviews     Review[]
-  wishlists   Wishlist[]  
-  carts       Cart[]  
-  category    Category?   @relation(fields: [categoryId], references: [id])
-  categoryId  Int?
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String?
+  price        Float
+  purchases    Purchase[]
+  reviews      Review[]
+  wishlists    Wishlist[]
+  carts        Cart[]
+  category   BookCategories[]
 }
 
+
+model BookCategories{
+  categoryId  Int
+  category    Category   @relation(fields: [categoryId], references: [id])
+
+  book Book  @relation(fields: [bookId], references: [id])
+  bookId  Int
+  @@id([categoryId, bookId])
+}
 
 model Purchase {
   id      Int   @id @default(autoincrement())
@@ -67,7 +75,7 @@ model Purchase {
 
 model Order {
   id       Int         @id @default(autoincrement())
-  user     User        @relation(fields: [userId], references: [id]) // Make sure the field name starts with a lowercase letter
+  user     User        @relation(fields: [userId], references: [id]) // 
   userId   Int
   items    OrderItem[]
   total    Float
