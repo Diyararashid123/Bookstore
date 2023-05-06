@@ -5,6 +5,7 @@ const bookRoutes = require('./Routes/bookRoutes.js');
 const userRoutes = require('./Routes/userRoutes.js');
 const cartRoutes = require('./Routes/cartRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
+const categoryRoutes= require('../Controllers/categorycontroller.js');
 
 const port = 3000;
 const app = express();
