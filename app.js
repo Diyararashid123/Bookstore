@@ -30,6 +30,7 @@ app.use(bookRoutes);
 app.use(userRoutes);
 app.use(cartRoutes);
 app.use(wishlistRoutes);
+app.use(categoryRoutes);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

@@ -5,44 +5,10 @@
 
   const getAllBooks = async (req, res) => {
     try {
-      const books = await prisma.book.findMany({
-        select: {
-          id: true,
-          title: true,
-          description: true,
-          price: true,
-          purchases: {
-            select: {
-              id: true
-            }
-          },
-          reviews: {
-            select: {
-              id: true
-            }
-          },
-          wishlists: {
-            select: {
-              id: true
-            }
-          },
-          carts: {
-            select: {
-              id: true
-            }
-          },
-          category: {
-            select: {
-              id: true,
-              name: true
-            }
-          },
-          categoryId: true
-        }
-      });
+      const books = await prisma.book.findMany();
       res.status(200).json(books);
     } catch (error) {
-      res.status(500).json({ error: "There is no book" });
+      res.status(500).json({ error: "There is no book " });
     }
   };
 
