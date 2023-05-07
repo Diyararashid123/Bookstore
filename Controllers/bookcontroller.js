@@ -27,7 +27,8 @@
   };
 
   const createBook = async (req, res) => {
-    console.log('Create book called'); // Add this line to ensure the function is being called
+    console.log('Request body:', req.body); // Log the request body
+  
     const { title, description, price, categories } = req.body;
   
     try {
@@ -52,6 +53,7 @@
       res.status(500).json({ error: "Failed to create book" });
     }
   };
+  
   
 
   const updateBook = async (req, res) => {
