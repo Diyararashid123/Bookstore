@@ -47,9 +47,11 @@
   
       res.status(201).json(newBook);
     } catch (error) {
+      console.error(error); // Add this line to log the error
       res.status(500).json({ error: "Failed to create book" });
     }
   };
+  
   
   
 
