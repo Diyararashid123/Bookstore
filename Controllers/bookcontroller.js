@@ -31,7 +31,7 @@
     const { title, price, description, categoryId } = req.body;
 
     try {
-      const createCategory = await prisma.post.create({
+      const createCategory = await prisma.book.create({
         data: {
           title: title,
           price:price,
