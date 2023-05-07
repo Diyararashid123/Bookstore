@@ -27,6 +27,7 @@
   };
 
   const createBook = async (req, res) => {
+    console.log('Create book called'); // Add this line to ensure the function is being called
     const { title, description, price, categories } = req.body;
   
     try {
@@ -38,12 +39,12 @@
         },
       });
   
-      const bookCategories = category.map(categoryId => ({
+      const bookCategories = categories.map(categoryId => ({
         categoryId,
         bookId: newBook.id,
       }));
   
-      await prisma.bookCategories.createMany({ data: bookCategories });
+      await prisma.BookCategories.createMany({ data: bookCategories });
   
       res.status(201).json(newBook);
     } catch (error) {
