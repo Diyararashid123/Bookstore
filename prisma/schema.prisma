@@ -1,119 +1,119 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+  // This is your Prisma schema file,
+  // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-}
+  datasource db {
+    provider          = "postgresql"
+    url               = env("DATABASE_URL")
+  }
 
-generator client {
-  provider = "prisma-client-js"
-}
+  generator client {
+    provider = "prisma-client-js"
+  }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
-}
+  model Post {
+    id        Int     @id @default(autoincrement())
+    title     String
+    content   String?
+    published Boolean @default(false)
+    author    User?   @relation(fields: [authorId], references: [id])
+    authorId  Int?
+  }
 
-model User {
-  id      Int       @id @default(autoincrement())
-  posts   Post[]
-  orders  Order[]   
-  balance   Float     @default(0)
-  purchases Purchase[]
-  reviews     Review[]
-  wishlists Wishlist[] 
-  carts     Cart[]     
-}
+  model User {
+    id      Int       @id @default(autoincrement())
+    posts   Post[]
+    orders  Order[]   
+    balance   Float     @default(0)
+    purchases Purchase[]
+    reviews     Review[]
+    wishlists Wishlist[] 
+    carts     Cart[]     
+  }
 
-model Category {
-  id     Int      @id @default(autoincrement())
-  name   String
-  book   BookCategories[]
-}
+  model Category {
+    id     Int      @id @default(autoincrement())
+    name   String
+    book   BookCategories[]
+  }
 
-model Book {
-  id           Int          @id @default(autoincrement())
-  title        String
-  description  String?
-  price        Float
-  purchases    Purchase[]
-  reviews      Review[]
-  wishlists    Wishlist[]
-  carts        Cart[]
-  category   BookCategories[]
-}
-
-
-model BookCategories{
-  categoryId  Int
-  category    Category   @relation(fields: [categoryId], references: [id])
-
-  book Book  @relation(fields: [bookId], references: [id])
-  bookId  Int
-  @@id([categoryId, bookId])
-}
-
-model Purchase {
-  id      Int   @id @default(autoincrement())
-  userId  Int
-  bookId  Int
-  user    User  @relation(fields: [userId], references: [id])
-  book    Book  @relation(fields: [bookId], references: [id])
-  // other fields if any, like purchaseDate
-}
-// model Author {
-//   id    Int     @id @default(autoincrement())
-//   name  String
-//   books Book[]
-// }
+  model Book {
+    id           Int          @id @default(autoincrement())
+    title        String
+    description  String?
+    price        Float
+    purchases    Purchase[]
+    reviews      Review[]
+    wishlists    Wishlist[]
+    carts        Cart[]
+    category   BookCategories[]
+  }
 
 
-model Order {
-  id       Int         @id @default(autoincrement())
-  user     User        @relation(fields: [userId], references: [id]) // 
-  userId   Int
-  items    OrderItem[]
-  total    Float
-}
+  model BookCategories{
+    categoryId  Int
+    category    Category   @relation(fields: [categoryId], references: [id])
 
-model OrderItem {
-  id      Int   @id @default(autoincrement())
-  order   Order @relation(fields: [orderId], references: [id])
-  orderId Int
-  bookId  Int
-  quantity Int
-}
+    book Book  @relation(fields: [bookId], references: [id])
+    bookId  Int
+    @@id([categoryId, bookId])
+  }
 
-model Review {
-  id        Int       @id @default(autoincrement())
-  userId    Int
-  bookId    Int
-  user      User      @relation(fields: [userId], references: [id])
-  book      Book      @relation(fields: [bookId], references: [id])
-  rating    Float
-  comment   String?
-  createdAt DateTime  @default(now())
-}
+  model Purchase {
+    id      Int   @id @default(autoincrement())
+    userId  Int
+    bookId  Int
+    user    User  @relation(fields: [userId], references: [id])
+    book    Book  @relation(fields: [bookId], references: [id])
+    // other fields if any, like purchaseDate
+  }
+  // model Author {
+  //   id    Int     @id @default(autoincrement())
+  //   name  String
+  //   books Book[]
+  // }
 
-model Wishlist {
-  id      Int       @id @default(autoincrement())
-  userId  Int
-  user    User      @relation(fields: [userId], references: [id])
-  bookId  Int
-  book    Book      @relation(fields: [bookId], references: [id])
-}
 
-model Cart {
-  id      Int       @id @default(autoincrement())
-  userId  Int
-  user    User      @relation(fields: [userId], references: [id])
-  bookId  Int
-  book    Book      @relation(fields: [bookId], references: [id])
-  quantity Int
-}
+  model Order {
+    id       Int         @id @default(autoincrement())
+    user     User        @relation(fields: [userId], references: [id]) // 
+    userId   Int
+    items    OrderItem[]
+    total    Float
+  }
+
+  model OrderItem {
+    id      Int   @id @default(autoincrement())
+    order   Order @relation(fields: [orderId], references: [id])
+    orderId Int
+    bookId  Int
+    quantity Int
+  }
+
+  model Review {
+    id        Int       @id @default(autoincrement())
+    userId    Int
+    bookId    Int
+    user      User      @relation(fields: [userId], references: [id])
+    book      Book      @relation(fields: [bookId], references: [id])
+    rating    Float
+    comment   String?
+    createdAt DateTime  @default(now())
+  }
+
+  model Wishlist {
+    id      Int       @id @default(autoincrement())
+    userId  Int
+    user    User      @relation(fields: [userId], references: [id])
+    bookId  Int
+    book    Book      @relation(fields: [bookId], references: [id])
+  }
+
+  model Cart {
+    id      Int       @id @default(autoincrement())
+    userId  Int
+    user    User      @relation(fields: [userId], references: [id])
+    bookId  Int
+    book    Book      @relation(fields: [bookId], references: [id])
+    quantity Int
+  }
 

@@ -27,39 +27,27 @@
   };
 
   const createBook = async (req, res) => {
-    console.log("The req quest body is:", req.body);
-    const { title, price, description, categoryId } = req.body;
-
+    const { title, description, price, categories } = req.body;
+  
     try {
-      const createCategory = await prisma.book.create({
+      const newBook = await prisma.book.create({
         data: {
-          title: title,
-          price:price,
-          description:description,
-          
-          category: {
-            create: [
-              {
-                category: {
-                  create: {
-                    id: categoryId,
-                  },
-                },
-              },
-            ],
-          },
+          title,
+          description,
+          price,
         },
-      })
+      });
+  
+      const bookCategories = categories.map(categoryId => ({
+        categoryId,
+        bookId: newBook.id,
+      }));
+  
+      await prisma.bookCategories.createMany({ data: bookCategories });
   
       res.status(201).json(newBook);
     } catch (error) {
-      console.error("Error creating book:", error);
-      console.error("Error details:", JSON.stringify(error, null, 2));
-      if (error.code === 'P2002') {
-        res.status(400).json({ error: 'The book already exists' });
-      } else {
-        res.status(500).json({ error: error.message, details: error });
-      }
+      res.status(500).json({ error: "Failed to create book" });
     }
   };
   
