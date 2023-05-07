@@ -38,7 +38,7 @@
         },
       });
   
-      const bookCategories = categories.map(categoryId => ({
+      const bookCategories = category.map(categoryId => ({
         categoryId,
         bookId: newBook.id,
       }));
@@ -47,32 +47,10 @@
   
       res.status(201).json(newBook);
     } catch (error) {
-      console.error(error); // Add this line to log the error
+      console.error('Error details:', error); // Log the error details
       res.status(500).json({ error: "Failed to create book" });
     }
   };
-  
-  async function create() {
-    const book = {
-      title: "Asdwff Lover",
-      price: 1299.99,
-      description: "Hello test test",
-      categories: [1], // Replace with an array of actual category IDs
-    };
-  
-    const response = await fetch("https://bookstore-git-main-diyararashid123.vercel.app/book/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(book),
-    });
-  
-    const data = await response.json();
-    console.log(data);
-  }
-  
-  create();
   
 
   const updateBook = async (req, res) => {
