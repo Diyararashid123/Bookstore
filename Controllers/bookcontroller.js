@@ -36,7 +36,7 @@
           description: description,
           price: price,
           categories: {
-            connect: categories.map((categoryId) => ({ categoryId })),
+            connect: [{ categoryId: categories }],
           },
         },
       });
@@ -51,6 +51,7 @@
       }
     }
   };
+  
   
 
   const updateBook = async (req, res) => {
