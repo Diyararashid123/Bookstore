@@ -37,7 +37,7 @@
           price:price,
           description:description,
           
-          categories: {
+          category: {
             create: [
               {
                 category: {
