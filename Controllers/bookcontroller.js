@@ -28,24 +28,28 @@
 
   const createBook = async (req, res) => {
     console.log("The req quest body is:", req.body);
-    const { title, price, description, categories } = req.body;
+    const { title, price, description, categoryId } = req.body;
 
     try {
-      const newBook = await prisma.book.create({
+      const createCategory = await prisma.post.create({
         data: {
-          title,
-          price,
-          description,
-          category: {
-            connect: categories.map((categoryId) => ({
-              categoryId_bookId: {
-                categoryId,
-                bookId: undefined,
+          title: title,
+          price:price,
+          description:description,
+          
+          categories: {
+            create: [
+              {
+                category: {
+                  create: {
+                    id: categoryId,
+                  },
+                },
               },
-            })),
+            ],
           },
         },
-      });
+      })
   
       res.status(201).json(newBook);
     } catch (error) {
