@@ -36,7 +36,9 @@
           description: description,
           price: price,
           category: {
-            connect: [{ categoryId: categories }],
+            create: {
+              categoryId: categories,
+            },
           },
         },
       });
