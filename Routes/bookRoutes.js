@@ -6,13 +6,15 @@
     createBook,
     updateBook,
     deleteBook,
-    buyBook
+    buyBook,
+    searchBooks
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
 
   // Book-related routes
   router.get('/books', getAllBooks);
+  router.get('/books/search', searchBooks);
   router.get('/book/:id', getBookById);
   router.post('/book/buy', buyBook);
   router.post('/book/create', createBook);

@@ -5,9 +5,18 @@
 
   const getAllBooks = async (req, res) => {
     try {
-      const books = await prisma.book.findMany();
+      const books = await prisma.book.findMany({
+        include: {
+          category: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
       res.status(200).json(books);
     } catch (error) {
+      console.log(error)
       res.status(500).json({ error: "There is no book " });
     }
   };
@@ -25,6 +34,8 @@
       res.status(500).json({ error: "BOOK ID DOSE NOT EXIST" });
     }
   };
+
+  
   const createBook = async (req, res) => {
     console.log('Request body:', req.body); // Log the request body
   
@@ -111,9 +122,8 @@
     }
   };
 
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook};
 
-  /*
+  
   const searchBooks = async (req, res) => {
     const { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
   
@@ -155,4 +165,5 @@
     }
   };
   
-  */
+  
+  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook,searchBooks};
