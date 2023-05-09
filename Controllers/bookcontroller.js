@@ -25,7 +25,6 @@
       res.status(500).json({ error: "BOOK ID DOSE NOT EXIST" });
     }
   };
-
   const createBook = async (req, res) => {
     console.log('Request body:', req.body); // Log the request body
   
@@ -37,23 +36,20 @@
           title,
           description,
           price,
+          category:{
+            connect: categories.map((categoryID) =>{
+              return ({id: categoryID})
+            })
+          }
         },
       });
-  
-      const bookCategories = categories.map(categoryId => ({
-        categoryId,
-        bookId: newBook.id,
-      }));
-  
-      await prisma.BookCategories.createMany({ data: bookCategories });
-  
+
       res.status(201).json(newBook);
     } catch (error) {
       console.error('Error details:', error); // Log the error details
       res.status(500).json({ error: "Failed to create book" });
     }
   };
-  
   
 
   const updateBook = async (req, res) => {

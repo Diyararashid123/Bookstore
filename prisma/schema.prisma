@@ -33,7 +33,7 @@
   model Category {
     id     Int      @id @default(autoincrement())
     name   String
-    book   BookCategories[]
+    book   Book[]
   }
 
   model Book {
@@ -45,19 +45,8 @@
     reviews      Review[]
     wishlists    Wishlist[]
     carts        Cart[]
-    category   BookCategories[]
+    category    Category[]
   }
-
-
-  model BookCategories{
-    categoryId  Int
-    category    Category   @relation(fields: [categoryId], references: [id])
-
-    book Book  @relation(fields: [bookId], references: [id])
-    bookId  Int
-    @@id([categoryId, bookId])
-  }
-
   model Purchase {
     id      Int   @id @default(autoincrement())
     userId  Int
