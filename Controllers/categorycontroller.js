@@ -23,11 +23,17 @@
   };
   
   const getBooksInCategory = async (req, res) => {
-    const { id } = req.params; 
+    const { id } = req.params;
     try {
       const books = await prisma.book.findMany({
         where: {
-          categoryId: parseInt(id),
+          categories: {
+            some: {
+              category: {
+                id: parseInt(id),
+              },
+            },
+          },
         },
       });
       res.status(200).json(books);
@@ -35,6 +41,7 @@
       res.status(500).json({ error: "Error retrieving books for the category" });
     }
   };
+  
   
   const updateCategory = async (req, res) => {
     const { id } = req.params;
