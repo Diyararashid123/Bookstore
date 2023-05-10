@@ -21,10 +21,7 @@
       res.status(500).json({ error: "Error creating category" });
     }
   };
-  
 
-  
-  
   const updateCategory = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
