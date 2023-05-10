@@ -21,10 +21,9 @@
       res.status(500).json({ error: "Error creating category" });
     }
   };
-
+  
   const getBooksInCategory = async (req, res) => {
     const { id } = req.params; 
-    parameters
     try {
       const books = await prisma.book.findMany({
         where: {
@@ -63,4 +62,4 @@
     }
   };
 
-  module.exports = { getAllCategories, createCategory, getBooksInCategory, updateCategory, deleteCategory };
+  module.exports = { getAllCategories, createCategory,getBooksInCategory, updateCategory, deleteCategory };
