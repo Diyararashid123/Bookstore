@@ -22,25 +22,7 @@
     }
   };
   
-  const getBooksInCategory = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const books = await prisma.book.findMany({
-        where: {
-          category: {
-            some: {
-              category: {
-                id: parseInt(id),
-              },
-            },
-          },
-        },
-      });
-      res.status(200).json(books);
-    } catch (error) {
-      res.status(500).json({ error: "Error retrieving books for the category" });
-    }
-  };
+
   
   
   const updateCategory = async (req, res) => {
@@ -69,4 +51,4 @@
     }
   };
 
-  module.exports = { getAllCategories, createCategory,getBooksInCategory, updateCategory, deleteCategory };
+  module.exports = { getAllCategories, createCategory, updateCategory, deleteCategory };

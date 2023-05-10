@@ -4,8 +4,7 @@
     getAllCategories,
     createCategory,
     updateCategory,
-    deleteCategory,
-    getBooksInCategory
+    deleteCategory
   } = require('../Controllers/categorycontroller.js'); // Adjust the path 
 
   const router = express.Router();
@@ -14,6 +13,6 @@
   router.post('/categories', createCategory);
   router.put('/categories/:id', updateCategory);
   router.delete('/categories/:id', deleteCategory);
-  router.get('/categories/:id/books', getBooksInCategory);
+  
   module.exports = router;
  

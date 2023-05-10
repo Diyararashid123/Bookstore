@@ -47,6 +47,8 @@ datasource db {
     carts        Cart[]
     category    Category[]
   }
+
+
   model Purchase {
     id      Int   @id @default(autoincrement())
     userId  Int
