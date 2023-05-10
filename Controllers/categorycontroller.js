@@ -27,7 +27,7 @@
     try {
       const books = await prisma.book.findMany({
         where: {
-          categories: {
+          category: {
             some: {
               category: {
                 id: parseInt(id),
