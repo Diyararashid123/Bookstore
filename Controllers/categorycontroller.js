@@ -22,6 +22,25 @@
     }
   };
 
+  const getCategoryWithBooks = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const category = await prisma.category.findUnique({
+        where: { id: parseInt(id) },
+        include: { book: true },
+      });
+      if (category) {
+        res.status(200).json(category);
+      } else {
+        res.status(404).json({ message: 'Category not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Error retrieving category and its books" });
+    }
+  };
+  
+
+
   const updateCategory = async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -48,4 +67,4 @@
     }
   };
 
-  module.exports = { getAllCategories, createCategory, updateCategory, deleteCategory };
+  module.exports = { getAllCategories, getCategoryWithBooks ,createCategory, updateCategory, deleteCategory };
