@@ -21,24 +21,24 @@
       res.status(500).json({ error: "Error creating category" });
     }
   };
-
-  const getCategoryWithBooks = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const category = await prisma.category.findUnique({
-        where: { id: parseInt(id) },
-        include: { book: true },
-      });
-      if (category) {
-        res.status(200).json(category);
-      } else {
-        res.status(404).json({ message: 'Category not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: "Error retrieving category and its books" });
+  // when you wanna change name to something that aren't unique then you need to make it unique in prisma first
+const getCategoryWithBooks = async (req, res) => {
+  const { name } = req.params;
+  try {
+    const category = await prisma.category.findUnique({
+      where: { name: name },
+      include: { book: true },
+    });
+    if (category) {
+      res.status(200).json(category);
+    } else {
+      res.status(404).json({ message: 'Category not found' });
     }
-  };
-  
+  } catch (error) {
+    res.status(500).json({ error: "Error retrieving category and its books" });
+  }
+};
+
 
 
   const updateCategory = async (req, res) => {

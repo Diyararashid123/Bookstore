@@ -30,11 +30,11 @@ datasource db {
     carts     Cart[]     
   }
 
-  model Category {
-    id     Int      @id @default(autoincrement())
-    name   String
-    book   Book[]
-  }
+    model Category {
+      id     Int      @id @default(autoincrement())
+      name   String    @unique
+      book   Book[]
+    }
 
   model Book {
     id           Int          @id @default(autoincrement())
