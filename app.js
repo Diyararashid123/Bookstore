@@ -18,6 +18,22 @@ const prisma = new PrismaClient({
   },
 });
 
+/*
+  
+  async function main() {
+    const sequences = await prisma.$queryRaw`SELECT c.relname FROM pg_class c WHERE c.relkind = 'S';`
+    console.log(sequences)
+  }
+  
+  main()
+    .catch((e) => {
+      throw e
+    })
+    .finally(async () => {
+      await prisma.$disconnect()
+    })
+  */
+
 const corsOptions = {
   origin: '*', // Or specify the allowed domains, for example: ['http://localhost:3001', 'https://yourdomain.com']
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
