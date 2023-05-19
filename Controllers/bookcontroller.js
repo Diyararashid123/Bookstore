@@ -34,7 +34,46 @@
       res.status(500).json({ error: "BOOK ID DOSE NOT EXIST" });
     }
   };
-
+  
+  const buyBook = async (req, res) => {
+    const { userId, bookId } = req.body;
+    try {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      const book = await prisma.book.findUnique({ where: { id: bookId } });
+  
+      if (!user || !book) {
+        res.status(404).json({ error: 'User or book not found' });
+        return;
+      }
+  
+      if (user.balance >= book.price) {
+        const newPurchase = await prisma.purchase.create({
+          data: {
+            user: { connect: { id: userId } },
+            book: { connect: { id: bookId } },
+          },
+        });
+  
+        // Increment the totalSold field of the purchased book
+        const updatedBook = await prisma.book.update({
+          where: { id: bookId },
+          data: { totalSold: book.totalSold + 1 },
+        });
+  
+        const updatedUser = await prisma.user.update({
+          where: { id: userId },
+          data: { balance: user.balance - book.price },
+        });
+  
+        res.status(201).json({ message: 'Book purchase successful', purchase: newPurchase });
+      } else {
+        res.status(400).json({ error: 'Insufficient balance' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while buying the book' });
+    }
+  };
+  
   
   const createBook = async (req, res) => {
     console.log('Request body:', req.body); // Log the request body
@@ -88,40 +127,6 @@
     }
 
   };
-
-  const buyBook = async (req, res) => {
-    const { userId, bookId } = req.body;
-    try {
-      const user = await prisma.user.findUnique({ where: { id: userId } });
-      const book = await prisma.book.findUnique({ where: { id: bookId } });
-
-      if (!user || !book) {
-        res.status(404).json({ error: 'User or book not found' });
-        return;
-      }
-
-      if (user.balance >= book.price) {
-        const newPurchase = await prisma.purchase.create({
-          data: {
-            user: { connect: { id: userId } },
-            book: { connect: { id: bookId } },
-          },
-        });
-
-        const updatedUser = await prisma.user.update({
-          where: { id: userId },
-          data: { balance: user.balance - book.price },
-        });
-
-        res.status(201).json({ message: 'Book purchase successful', purchase: newPurchase });
-      } else {
-        res.status(400).json({ error: 'Insufficient balance' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while buying the book' });
-    }
-  };
-
 
   
   const searchBooks = async (req, res) => {

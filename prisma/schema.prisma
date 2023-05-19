@@ -46,6 +46,7 @@ datasource db {
     wishlists    Wishlist[]
     carts        Cart[]
     category    Category[]
+    totalSold    Int          @default(0) // New field to track total sales
   }
   
   model Purchase {
