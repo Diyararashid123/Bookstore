@@ -34,46 +34,84 @@
       res.status(500).json({ error: "BOOK ID DOSE NOT EXIST" });
     }
   };
-  
-  const buyBook = async (req, res) => {
-    const { userId, bookId } = req.body;
-    try {
-      const user = await prisma.user.findUnique({ where: { id: userId } });
+
+ const buyBook = async (req, res) => {
+  // Extract user ID and cart from request body
+  const { userId, cart } = req.body;
+
+  try {
+    // Find user in database
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+
+    // Check if user exists
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    // Initialize total cost
+    let totalCost = 0;
+
+    // Iterate over all items in the cart
+    for (let i = 0; i < cart.length; i++) {
+      // Extract book ID and quantity from the current cart item
+      const { id: bookId, quantity } = cart[i];
+
+      // Find the corresponding book in the database
       const book = await prisma.book.findUnique({ where: { id: bookId } });
-  
-      if (!user || !book) {
-        res.status(404).json({ error: 'User or book not found' });
+
+      // If the book doesn't exist, skip to the next item in the cart
+      if (!book) {
+        res.status(404).jso({error: 'The book dosnt exist'})
+      }
+
+      // Check if the quantity requested is more than the books stock
+      if (book.stock < quantity) {
+
+        // If it is, return an error message
+        res.status(400).json({ error: `Requested quantity for ${book.title} exceeds book stock` });
         return;
       }
-  
-      if (user.balance >= book.price) {
-        const newPurchase = await prisma.purchase.create({
-          data: {
-            user: { connect: { id: userId } },
-            book: { connect: { id: bookId } },
-          },
-        });
-  
-        // Increment the totalSold field of the purchased book
-        const updatedBook = await prisma.book.update({
-          where: { id: bookId },
-          data: { totalSold: book.totalSold + 1 },
-        });
-  
-        const updatedUser = await prisma.user.update({
-          where: { id: userId },
-          data: { balance: user.balance - book.price },
-        });
-  
-        res.status(201).json({ message: 'Book purchase successful', purchase: newPurchase });
-      } else {
-        res.status(400).json({ error: 'Insufficient balance' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while buying the book' });
+
+      // Calculate the cost for this book and add it to the total cost
+      totalCost += book.price * quantity;
+
+      // Updat the book sold count and stock in the databas
+      const updatedBook = await prisma.book.update({
+        where: { id: bookId },
+        data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
+      });
+
+      // Create a new purchase in the database
+      const newPurchase = await prisma.purchase.create({
+        data: {
+          user: { connect: { id: userId } },
+          book: { connect: { id: bookId } },
+          quantity,
+        },
+      });
     }
-  };
-  
+
+    
+    if (user.balance >= totalCost) {
+      // If they do update the user's balance in the database
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: { balance: user.balance - totalCost },
+      });
+
+      // Then return a successful purchase message
+      res.status(201).json({ message: 'Book purchase successful' });
+    } else {
+      // If the user doesn't have enough balance, return an error message
+      res.status(400).json({ error: 'Insufficient balance' });
+    }
+  } catch (error) {
+    // If something went wrong during the process, return an error message
+    res.status(500).json({ error: 'An error occurred while buying the book' });
+  }
+};
+
   
   const createBook = async (req, res) => {
     console.log('Request body:', req.body); // Log the request body
@@ -86,6 +124,7 @@
           title,
           description,
           price,
+          releaseDate: new Date(releaseDate),
           category:{
             connect: categories.map((categoryID) =>{
               return ({id: categoryID})
