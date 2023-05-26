@@ -119,12 +119,14 @@
     const { title, description, price, categories } = req.body;
   
     try {
+      const currentDate = new Date().toLocaleDateString()
+      
       const newBook = await prisma.book.create({
         data: {
           title,
           description,
           price,
-          releaseDate: new Date(releaseDate),
+          releaseDate: currentDate,
           category:{
             connect: categories.map((categoryID) =>{
               return ({id: categoryID})
