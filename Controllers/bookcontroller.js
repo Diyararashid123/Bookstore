@@ -113,34 +113,35 @@
 };
 
   
-  const createBook = async (req, res) => {
-    console.log('Request body:', req.body); // Log the request body
-  
-    const { title, description, price, categories } = req.body;
-  
-    try {
-      const currentDate = new Date().toLocaleDateString()
-      
-      const newBook = await prisma.book.create({
-        data: {
-          title,
-          description,
-          price,
-          releaseDate: currentDate,
-          category:{
-            connect: categories.map((categoryID) =>{
-              return ({id: categoryID})
-            })
-          }
-        },
-      });
+const createBook = async (req, res) => {
+  console.log('Request body:', req.body); // Log the request body
 
-      res.status(201).json(newBook);
-    } catch (error) {
-      console.error('Error details:', error); // Log the error details
-      res.status(500).json({ error: error });
-    }
-  };
+  const { title, description, price, categories } = req.body;
+
+  try {
+    const currentDate = new Date();
+    
+    const newBook = await prisma.book.create({
+      data: {
+        title,
+        description,
+        price,
+        releaseDate: currentDate,
+        category: {
+          connect: categories.map((categoryID) => {
+            return { id: categoryID };
+          })
+        }
+      },
+    });
+
+    res.status(201).json(newBook);
+  } catch (error) {
+    console.error('Error details:', error); // Log the error details
+    res.status(500).json({ error: error });
+  }
+};
+
   
 
   const updateBook = async (req, res) => {
