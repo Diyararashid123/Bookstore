@@ -138,7 +138,7 @@
       res.status(201).json(newBook);
     } catch (error) {
       console.error('Error details:', error); // Log the error details
-      res.status(500).json({ error: "Failed to create book" });
+      res.status(500).json({ error: error });
     }
   };
   
