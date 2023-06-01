@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
 
 
 const Cleark = async(req, res) => { 
-  const {data} = req.req;
+  const {data} = req.body;
   try{
     
   res.status(201).json({message:`Here is the users ${data.id} `});
