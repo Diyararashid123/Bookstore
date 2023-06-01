@@ -29,8 +29,15 @@ const createUser = async (req, res) => {
 };
 
 
-const Cleark = async(req, res) => {
-  res.status(201).json({message: "Annon im, here dont leave me!!!!!!! :("});
-}
+const Cleark = async(req, res) => { 
+  const {data} = req.req;
+  try{
+    
+  res.status(201).json({message:`Here is the users ${data.id} `});
+  }catch(error)
+  {
+  res.status(500).json({error: "There is no Id"})
+ }
+};
 
 module.exports = {getUser, createUser,Cleark }; 
