@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
 
 
 const Cleark = async(req, res) => {
-  res.status(1000000).json({message: "Annon im, here dont leave me!!!!!!! :("});
+  res.status(201).json({message: "Annon im, here dont leave me!!!!!!! :("});
 }
 
 module.exports = {getUser, createUser,Cleark }; 
