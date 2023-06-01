@@ -7,7 +7,6 @@ const cartRoutes = require('./Routes/cartRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
 
-
 const port = 3000;
 const app = express();
 const prisma = new PrismaClient({
@@ -18,29 +17,12 @@ const prisma = new PrismaClient({
   },
 });
 
-/*
-  
-  async function main() {
-    const sequences = await prisma.$queryRaw`SELECT c.relname FROM pg_class c WHERE c.relkind = 'S';`
-    console.log(sequences)
-  }
-  
-  main()
-    .catch((e) => {
-      throw e
-    })
-    .finally(async () => {
-      await prisma.$disconnect()
-    })
-  */
-
 const corsOptions = {
   origin: '*', // Or specify the allowed domains, for example: ['http://localhost:3001', 'https://yourdomain.com']
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
-
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -49,6 +31,13 @@ app.use(userRoutes);
 app.use(cartRoutes);
 app.use(wishlistRoutes);
 app.use(categoryRoutes);
+
+// Error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong, please try again later.');
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

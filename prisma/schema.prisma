@@ -21,6 +21,7 @@ datasource db {
 
   model User {
     id      Int       @id @default(autoincrement())
+    clerkId Int       @default(0)
     posts   Post[]
     orders  Order[]   
     balance   Float     @default(0)
@@ -37,21 +38,24 @@ datasource db {
       featured Boolean @default(false) 
     }
 
-  model Book {
-    id           Int          @id @default(autoincrement())
-    title        String
-    description  String?
-    price        Float
-    releaseDate  DateTime    
-    purchases    Purchase[]
-    reviews      Review[]
-    wishlists    Wishlist[]
-    carts        Cart[]
-    category    Category[]
-    totalSold    Int          @default(0) // New field to track total sales
-    stock        Int          @default(0) // New field to track book stock
-    featured     Boolean      @default(false)
-  }
+model Book {
+  id           Int          @id @default(autoincrement())
+  title        String
+  description  String?
+  price        Float
+  releaseDate  DateTime    
+  purchases    Purchase[]
+  reviews      Review[]
+  wishlists    Wishlist[]
+  carts        Cart[]
+  category     Category[]
+  totalSold    Int          @default(0) 
+  stock        Int          @default(0)
+  featured     Boolean      @default(false)
+  views        Int          @default(0) 
+  wishlistCount Int         @default(0) 
+}
+
   
   model Purchase {
     id      Int   @id @default(autoincrement())

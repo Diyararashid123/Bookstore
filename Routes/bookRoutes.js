@@ -2,7 +2,7 @@
   const express = require('express');
   const {
     getAllBooks,
-    getBookById,
+    
     createBook,
     updateBook,
     deleteBook,
@@ -15,7 +15,6 @@
   // Book-related routes
   router.get('/books', getAllBooks);
   router.get('/books/search', searchBooks);
-  router.get('/book/:id', getBookById);
   router.post('/book/buy', buyBook);
   router.post('/book/create', createBook);
   router.put('/book/update/:id', updateBook);

@@ -2,8 +2,19 @@
 
   const { PrismaClient } = require('@prisma/client');
   const prisma = new PrismaClient();
-
   const getAllBooks = async (req, res) => {
+    // Extract limit, skip and sortBy from request query parameters
+    const { limit, skip, sortBy } = req.query;
+  
+    const sortOptions = {
+      'mostPopular': { totalSold: 'desc' },
+      'topSelling': { price: 'desc' },
+      'mostWished': {},  // This requires changes in your data model to track wishlist counts
+      'latestReleases': { releaseDate: 'desc' },
+    };
+  
+    let orderBy = sortOptions[sortBy] || {};  // If sortBy is not provided, no sorting is applied
+  
     try {
       const books = await prisma.book.findMany({
         include: {
@@ -13,6 +24,9 @@
             },
           },
         },
+        take: parseInt(limit) || undefined, // If limit is not provided, fetch all records
+        skip: parseInt(skip) || undefined,  // If skip is not provided, start from the first record
+        orderBy
       });
       res.status(200).json(books);
     } catch (error) {
@@ -20,21 +34,7 @@
       res.status(500).json({ error: "There is no book " });
     }
   };
-
-  const getBookById = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
-      if (book) {
-        res.status(200).json(book);
-      } else {
-        res.status(404).json({ message: 'Book not found' });
-      }
-    } catch (error) {
-      res.status(500).json({ error: "BOOK ID DOSE NOT EXIST" });
-    }
-  };
-
+  
  const buyBook = async (req, res) => {
   // Extract user ID and cart from request body
   const { userId, cart } = req.body;
@@ -172,15 +172,17 @@ const createBook = async (req, res) => {
 
   
   const searchBooks = async (req, res) => {
-    const { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
+    let { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
   
-    // Convert categories string to an array in javascript
+    // Remove all spaces from the search query
+    searchQuery = searchQuery.replace(/\s+/g, '');
+  
+    // Convert categories string to an array
     const categoryArray = categories ? categories.split(',') : null;
   
     // Prepare sorting options
     const orderBy = {};
     if (sortBy) {
-      //desc from low to high
       orderBy[sortBy] = 'desc';
     }
   
@@ -189,11 +191,9 @@ const createBook = async (req, res) => {
         where: {
           AND: [
             {
-              // make it easier for the user to serach by tille, author and category of the book and filtering it accouring to the users input
               OR: [
                 { title: { contains: searchQuery, mode: 'insensitive' } },
-                { author: { name: { contains: searchQuery, mode: 'insensitive' } } },
-                { category: { name: { contains: searchQuery, mode: 'insensitive' } } },
+                // other conditions...
               ],
             },
             categoryArray && { categoryId: { in: categoryArray } },
@@ -212,5 +212,64 @@ const createBook = async (req, res) => {
     }
   };
   
+  const getTopSellingBooks = async (req, res) => {
+    try {
+      const { limit } = req.query;
+      const books = await prisma.book.findMany({
+        take: parseInt(limit) || undefined,
+        orderBy: {
+          totalSold: 'desc',
+        },
+      });
+      res.status(200).json(books);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while retrieving top selling books' });
+    }
+  };
   
-  module.exports = { getAllBooks, getBookById, createBook, updateBook, deleteBook, buyBook,searchBooks};
+  const getMostPopularBooks = async (req, res) => {
+    try {
+      const { limit } = req.query;
+      const books = await prisma.book.findMany({
+        take: parseInt(limit) || undefined,
+        orderBy: {
+          views: 'desc',
+        },
+      });
+      res.status(200).json(books);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while retrieving most popular books' });
+    }
+  };
+  
+  const getMostWishedBooks = async (req, res) => {
+    try {
+      const { limit } = req.query;
+      const books = await prisma.book.findMany({
+        take: parseInt(limit) || undefined,
+        orderBy: {
+          wishlistCount: 'desc',
+        },
+      });
+      res.status(200).json(books);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while retrieving most wished books' });
+    }
+  };
+  
+  const getLatestReleasedBooks = async (req, res) => {
+    try {
+      const { limit } = req.query;
+      const books = await prisma.book.findMany({
+        take: parseInt(limit) || undefined,
+        orderBy: {
+          releaseDate: 'desc',
+        },
+      });
+      res.status(200).json(books);
+    } catch (error) {
+      res.status(500).json({ error: 'An error occurred while retrieving latest released books' });
+    }
+  };
+  
+  module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks};

@@ -14,5 +14,23 @@ const getUser = async (req, res) => {
   }
 };
 
+const createUser = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        id
+      },
+    });
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create user" });
+  }
+};
 
-module.exports = {getUser };
+
+const Cleark = async(req, res) => {
+  res.status(1000000).json({message: "Annon im, here dont leave me!!!!!!! :("});
+}
+
+module.exports = {getUser, createUser,Cleark }; 
