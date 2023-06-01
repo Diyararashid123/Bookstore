@@ -9,7 +9,7 @@ const router = express.Router();
 
 // User-related route
 router.get('/users/:id', getUser);
-router.get('/clerk', Cleark);
+router.post('/clerk', Cleark);
 router.get('/hahahha',createUser);
 
 module.exports = router;
