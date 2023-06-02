@@ -34,7 +34,7 @@ const Cleark = async(req, res) => {
   try{
     const newUser = await prisma.user.create({
       data: {
-        id: data.id
+        clerkId: data.id
       },
     });
     res.status(201).json({message:`Successfully saved user with ID: ${data.id}`});
