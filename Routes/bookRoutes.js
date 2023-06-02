@@ -16,7 +16,7 @@
   const router = express.Router();
 
   // Book-related routes
-  router.get('/books', getAllBooks);
+  router.get('/books/:int', getAllBooks);
   router.get('/books/search', searchBooks);
   router.post('/book/buy', buyBook);
   router.post('/book/create', createBook);

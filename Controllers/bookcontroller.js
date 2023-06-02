@@ -6,14 +6,14 @@
     // Extract limit, skip and sortBy from request query parameters
     const { limit, skip, sortBy } = req.query;
   
-    // const sortOptions = {
-    //   'mostPopular': { totalSold: 'desc' },
-    //   'topSelling': { price: 'desc' },
-    //   'mostWished': {}, 
-    //   'latestReleases': { releaseDate: 'desc' },
-    // };
+    const sortOptions = {
+      'mostPopular': { totalSold: 'desc' },
+      'topSelling': { price: 'desc' },
+      'mostWished': {}, 
+      'latestReleases': { releaseDate: 'desc' },
+    };
   
-    // let orderBy = sortOptions[sortBy] || {};  // If sortBy is not provided, no sorting is applied
+    let orderBy = sortOptions[sortBy] || {};  // If sortBy is not provided, no sorting is applied
   
     try {
       const books = await prisma.book.findMany({
