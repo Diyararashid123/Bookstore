@@ -32,12 +32,16 @@ const createUser = async (req, res) => {
 const Cleark = async(req, res) => { 
   const {data} = req.body;
   try{
-    
-  res.status(201).json({message:`Here is the users ${data.id} `});
-  }catch(error)
-  {
-  res.status(500).json({error: "There is no Id"})
- }
+    const newUser = await prisma.user.create({
+      data: {
+        id: data.id
+      },
+    });
+    res.status(201).json({message:`Successfully saved user with ID: ${data.id}`});
+  } catch(error) {
+    res.status(500).json({error: "Failed to save ID"})
+  }
 };
+
 
 module.exports = {getUser, createUser,Cleark }; 
