@@ -6,14 +6,14 @@
     // Extract limit, skip and sortBy from request query parameters
     const { limit, skip, sortBy } = req.query;
   
-    const sortOptions = {
-      'mostPopular': { totalSold: 'desc' },
-      'topSelling': { price: 'desc' },
-      'mostWished': {},  // This requires changes in your data model to track wishlist counts
-      'latestReleases': { releaseDate: 'desc' },
-    };
+    // const sortOptions = {
+    //   'mostPopular': { totalSold: 'desc' },
+    //   'topSelling': { price: 'desc' },
+    //   'mostWished': {}, 
+    //   'latestReleases': { releaseDate: 'desc' },
+    // };
   
-    let orderBy = sortOptions[sortBy] || {};  // If sortBy is not provided, no sorting is applied
+    // let orderBy = sortOptions[sortBy] || {};  // If sortBy is not provided, no sorting is applied
   
     try {
       const books = await prisma.book.findMany({
@@ -41,7 +41,7 @@
 
   try {
     // Find user in database
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const user = await prisma.user.findUnique({ where: { clerkId: userId } });
 
     // Check if user exists
     if (!user) {
@@ -85,7 +85,7 @@
       // Create a new purchase in the database
       const newPurchase = await prisma.purchase.create({
         data: {
-          user: { connect: { id: userId } },
+          user: { connect: { clerkId: userId } },
           book: { connect: { id: bookId } },
           quantity,
         },
@@ -96,7 +96,7 @@
     if (user.balance >= totalCost) {
       // If they do update the user's balance in the database
       const updatedUser = await prisma.user.update({
-        where: { id: userId },
+        where: { clerkId: userId },
         data: { balance: user.balance - totalCost },
       });
 
@@ -214,7 +214,7 @@ const createBook = async (req, res) => {
   
   const getTopSellingBooks = async (req, res) => {
     try {
-      const { limit } = req.query;
+      const { limit } = req.body;
       const books = await prisma.book.findMany({
         take: parseInt(limit) || undefined,
         orderBy: {
@@ -229,7 +229,7 @@ const createBook = async (req, res) => {
   
   const getMostPopularBooks = async (req, res) => {
     try {
-      const { limit } = req.query;
+      const { limit } = req.body;
       const books = await prisma.book.findMany({
         take: parseInt(limit) || undefined,
         orderBy: {
@@ -244,7 +244,7 @@ const createBook = async (req, res) => {
   
   const getMostWishedBooks = async (req, res) => {
     try {
-      const { limit } = req.query;
+      const { limit } = req.body;
       const books = await prisma.book.findMany({
         take: parseInt(limit) || undefined,
         orderBy: {
@@ -259,7 +259,7 @@ const createBook = async (req, res) => {
   
   const getLatestReleasedBooks = async (req, res) => {
     try {
-      const { limit } = req.query;
+      const { limit } = req.body;
       const books = await prisma.book.findMany({
         take: parseInt(limit) || undefined,
         orderBy: {
