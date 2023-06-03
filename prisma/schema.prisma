@@ -24,11 +24,12 @@ datasource db {
     clerkId String       @unique
     posts   Post[]
     orders  Order[]   
-    balance   Float     @default(0)
+    balance   Float     @default(500)
     purchases Purchase[]
     reviews     Review[]
     wishlists Wishlist[] 
     carts     Cart[]     
+    interactions Interaction[] 
   }
 
     model Category {
@@ -54,6 +55,7 @@ model Book {
   featured     Boolean      @default(false)
   views        Int          @default(0) 
   wishlistCount Int         @default(0) 
+  interactions Interaction[] 
 }
 
   
@@ -116,3 +118,11 @@ model Book {
     quantity Int
   }
 
+model Interaction {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  bookId  Int
+  user    User     @relation(fields: [userId], references: [id])
+  book    Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime  @default(now())
+}

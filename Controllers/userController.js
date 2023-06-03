@@ -43,5 +43,19 @@ const Cleark = async(req, res) => {
   }
 };
 
+const createInteraction = async (req, res) => {
+  const { userId, bookId } = req.body;
+  try {
+    const newInteraction = await prisma.interaction.create({
+      data: {
+        userId,
+        bookId,
+      },
+    });
+    res.status(201).json(newInteraction);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create interaction' });
+  }
+};
 
-module.exports = {getUser, createUser,Cleark }; 
+module.exports = {getUser, createUser, Cleark, createInteraction };
