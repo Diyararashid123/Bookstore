@@ -157,8 +157,6 @@ const createBook = async (req, res) => {
   }
 };
 
-  
-
   const updateBook = async (req, res) => {
     const { id } = req.params;
     const { title, description, price, authorId, categoryId } = req.body;
@@ -184,48 +182,57 @@ const createBook = async (req, res) => {
     }
 
   };
-
   
   const searchBooks = async (req, res) => {
-    let { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
-  
-    // Remove all spaces from the search query
-    searchQuery = searchQuery.replace(/\s+/g, '');
-  
-    // Convert categories string to an array
-    const categoryArray = categories ? categories.split(',') : null;
-  
-    // Prepare sorting options
-    const orderBy = {};
-    if (sortBy) {
-      orderBy[sortBy] = 'desc';
-    }
-  
-    try {
-      const books = await prisma.book.findMany({
-        where: {
-          AND: [
-            {
-              OR: [
-                { title: { contains: searchQuery, mode: 'insensitive' } },
-                // other conditions...
-              ],
-            },
-            categoryArray && { categoryId: { in: categoryArray } },
-            minPrice && { price: { gte: parseFloat(minPrice) } },
-            maxPrice && { price: { lte: parseFloat(maxPrice) } },
-            startDate && { publicationDate: { gte: new Date(startDate) } },
-            endDate && { publicationDate: { lte: new Date(endDate) } },
-          ].filter(Boolean),
-        },
-        orderBy,
-      });
-  
-      res.status(200).json(books);
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while searching for books' });
-    }
-  };
+  let { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
+
+  // Helper function to normalize book titles and search inputs
+  function normalize(input) {
+    return input.replace(/[-\s]/g, '').toLowerCase();
+  }
+
+  // Normalize the search query
+  searchQuery = normalize(searchQuery);
+
+  // Convert categories string to an array
+  const categoryArray = categories ? categories.split(',') : null;
+
+  // Prepare sorting options
+  const orderBy = {};
+  if (sortBy) {
+    orderBy[sortBy] = 'desc';
+  }
+
+  try {
+    const books = await prisma.book.findMany({
+      where: {
+        AND: [
+          {
+            OR: [
+              
+              { title: { contains: searchQuery, mode: 'insensitive' } },
+              
+            ],
+          },
+          categoryArray && { categoryId: { in: categoryArray } },
+          minPrice && { price: { gte: parseFloat(minPrice) } },
+          maxPrice && { price: { lte: parseFloat(maxPrice) } },
+          startDate && { publicationDate: { gte: new Date(startDate) } },
+          endDate && { publicationDate: { lte: new Date(endDate) } },
+        ].filter(Boolean),
+      },
+      orderBy,
+    });
+
+    // Filter books where the normalized title includes the normalized search input
+    const matchingBooks = books.filter(book => normalize(book.title).includes(searchQuery));
+
+    res.status(200).json(matchingBooks);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while searching for books' });
+  }
+};
+
   
   const getTopSellingBooks = async (req, res) => {
     try {

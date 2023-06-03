@@ -3,7 +3,6 @@ const { PrismaClient } = require('@prisma/client');
 const cors = require('cors');
 const bookRoutes = require('./Routes/bookRoutes.js');
 const userRoutes = require('./Routes/userRoutes.js');
-const cartRoutes = require('./Routes/cartRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
 
@@ -28,7 +27,6 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(bookRoutes);
 app.use(userRoutes);
-app.use(cartRoutes);
 app.use(wishlistRoutes);
 app.use(categoryRoutes);
 
