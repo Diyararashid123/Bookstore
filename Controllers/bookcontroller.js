@@ -2,6 +2,7 @@
 
   const { PrismaClient } = require('@prisma/client');
   const prisma = new PrismaClient();
+
   const getAllBooks = async (req, res) => {
     // Extract limit, skip and sortBy from request query parameters
     const { limit, skip, sortBy } = req.query;
@@ -35,6 +36,20 @@
     }
   };
   
+  const getBookById = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
+      if (book) {
+        res.status(200).json(book);
+      } else {
+        res.status(404).json({ message: 'Book not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "BOOK ID DOSE NOT EXIST" });
+    }
+  };
+
  const buyBook = async (req, res) => {
   // Extract user ID and cart from request body
   const { userId, cart } = req.body;
@@ -272,4 +287,4 @@ const createBook = async (req, res) => {
     }
   };
   
-  module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks};
+  module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById};
