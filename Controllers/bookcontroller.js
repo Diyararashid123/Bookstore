@@ -89,22 +89,6 @@
     
           // Calculate the cost for this book and add it to the total cost
           totalCost += book.price * quantity;
-          
-          // Update the book sold count and stock in the database
-          const updatedBook = await prisma.book.update({
-            where: { id: bookId },
-            data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
-          });
-    
-          // Create a new purchase in the database
-          const newPurchase = await prisma.purchase.create({
-            data: {
-              userId,
-              bookId,
-              quantity,
-              createdAt: new Date(),
-            },
-          });
         }
     
         if (user.balance >= totalCost) {
@@ -113,6 +97,26 @@
             where: { clerkId: userId },
             data: { balance: user.balance - totalCost },
           });
+
+          for (let i = 0; i < cart.length; i++) {
+            const { id: bookId, quantity } = cart[i];
+    
+             // Update the book sold count and stock in the database
+             const updatedBook = await prisma.book.update({
+              where: { id: bookId },
+              data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
+            });
+      
+            // Create a new purchase in the database
+            const newPurchase = await prisma.purchase.create({
+              data: {
+                userId,
+                bookId,
+                quantity,
+                createdAt: new Date(),
+              },
+            });
+          }
     
           // Then return a successful purchase message
           res.status(201).json({ message: 'Book purchase successful' });
