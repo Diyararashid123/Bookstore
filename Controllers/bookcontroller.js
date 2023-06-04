@@ -125,6 +125,7 @@
         console.error('Error details:', error); 
         res.status(500).json({ error: error})
       };
+    }
     
     
   const createBook = async (req, res) => {
