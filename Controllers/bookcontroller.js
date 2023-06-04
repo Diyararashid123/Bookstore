@@ -50,93 +50,82 @@
       }
     };
 
-  const buyBook = async (req, res) => {
-    // Extract user ID and cart from request body
-    const { userId, cart } = req.body;
-
-    try {
-      // Find user in database
-      const user = await prisma.user.findUnique({ where: { clerkId: userId } });
-
-      // Check if user exists
-      if (!user) {
-        res.status(404).json({ error: 'User not found' });
-        return;
-      }
-      // Initialize total cost
-      let totalCost = 0;
-      
-      // Iterate over all items in the cart
-      for (let i = 0; i < cart.length; i++) {
-        // Extract book ID and quantity from the current cart item
-        const { id: bookId, quantity } = cart[i];
-
-        // Find the corresponding book in the database
-        const book = await prisma.book.findUnique({ where: { id: bookId } });
-
-        // If the book doesn't exist, skip to the next item in the cart
-        if (!book) {
-           res.status(404).jso({error: 'The book dosnt exist'})
-        }
-
-
-        // Check if the quantity requested is more than the books stock
-        if (book.stock < quantity) {
-
-          // If it is, return an error message
-          res.status(400).json({ error: `Requested quantity for ${book.title} exceeds book stock` });
+    const buyBook = async (req, res) => {
+      // Extract user ID and cart from request body
+      const { userId, cart } = req.body;
+    
+      try {
+        // Find user in database
+        const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+    
+        // Check if user exists
+        if (!user) {
+          res.status(404).json({ error: 'User not found' });
           return;
         }
-
-        // Calculate the cost for this book and add it to the total cost
-        totalCost += book.price * quantity;
+        // Initialize total cost
+        let totalCost = 0;
         
-        // Updat the book sold count and stock in the databas
-        const updatedBook = await prisma.book.update({
-          where: { id: bookId },
-          data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
-        });
-      }
-     
-
-      
-      if (user.balance >= totalCost) {
-        // If they do update the user's balance in the database
-        const updatedUser = await prisma.user.update({
-          where: { clerkId: userId },
-          data: { balance: user.balance - totalCost },
-        });
-
-        for(let i = 0; i<cart.length; i++){
-
-            // Create a new purchase in the database
-       const newPurchase = await prisma.purchase.create({
-        data: {
-          user: { connect: { clerkId: userId } },
-          book: { connect: { id: bookId } },
-          quantity,
-        },
-      });
-        }
-        // Then return a successful purchase message
-        res.status(201).json({ message: 'Book purchase successful' });
-      } else {
-        // If the user doesn't have enough balance, return an error message
-        res.status(400).json({ error: 'Insufficient balance' });
-      }
-
-      
-      
+        // Iterate over all items in the cart
+        for (let i = 0; i < cart.length; i++) {
+          // Extract book ID and quantity from the current cart item
+          const { id: bookId, quantity } = cart[i];
     
-
-      
-    } catch (error) {
-      // If something went wrong during the process, return an error message
-      console.error('Error details:', error); 
-      res.status(500).json({ error: error });
-    }
-  };
-
+          // Find the corresponding book in the database
+          const book = await prisma.book.findUnique({ where: { id: bookId } });
+    
+          // If the book doesn't exist, skip to the next item in the cart
+          if (!book) {
+            res.status(404).json({error: 'The book does not exist'});
+            continue;
+          }
+    
+          // Check if the quantity requested is more than the books stock
+          if (book.stock < quantity) {
+            // If it is, return an error message
+            res.status(400).json({ error: `Requested quantity for ${book.title} exceeds book stock` });
+            return;
+          }
+    
+          // Calculate the cost for this book and add it to the total cost
+          totalCost += book.price * quantity;
+          
+          // Update the book sold count and stock in the database
+          const updatedBook = await prisma.book.update({
+            where: { id: bookId },
+            data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
+          });
+    
+          // Create a new purchase in the database
+          const newPurchase = await prisma.purchase.create({
+            data: {
+              userId,
+              bookId,
+              quantity,
+              purchaseDate: new Date(),
+            },
+          });
+        }
+    
+        if (user.balance >= totalCost) {
+          // If they do, update the user's balance in the database
+          const updatedUser = await prisma.user.update({
+            where: { clerkId: userId },
+            data: { balance: user.balance - totalCost },
+          });
+    
+          // Then return a successful purchase message
+          res.status(201).json({ message: 'Book purchase successful' });
+        } else {
+          // If the user doesn't have enough balance, return an error message
+          res.status(400).json({ error: 'Insufficient balance' });
+        }
+      } catch (error) {
+        // If something went wrong during the process, return an error message
+        console.error('Error details:', error); 
+        res.status(500).json({ error: error})
+      };
+    
     
   const createBook = async (req, res) => {
     console.log('Request body:', req.body); // Log the request body

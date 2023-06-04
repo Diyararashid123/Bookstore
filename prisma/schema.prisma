@@ -57,19 +57,15 @@ model Book {
 }
 
   
-  model Purchase {
-    id      Int   @id @default(autoincrement())
-    userId  Int
-    bookId  Int
-    user    User  @relation(fields: [userId], references: [id])
-    book    Book  @relation(fields: [bookId], references: [id])
-    // other fields if any, like purchaseDate
-  }
-  // model Author {
-  //   id    Int     @id @default(autoincrement())
-  //   name  String
-  //   books Book[]
-  // }
+    model Purchase {
+      id        Int       @id @default(autoincrement())
+      userId    Int
+      bookId    Int
+      quantity  Int       // Added quantity field
+      createdAt DateTime  @default(now()) // Added createdAt field
+      user      User      @relation(fields: [userId], references: [id])
+      book      Book      @relation(fields: [bookId], references: [id])
+    }
 
 
   model Order {
