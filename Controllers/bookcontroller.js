@@ -67,8 +67,7 @@
       // Initialize total cost
       let totalCost = 0;
 
-
-      try{
+      
       // Iterate over all items in the cart
       for (let i = 0; i < cart.length; i++) {
         // Extract book ID and quantity from the current cart item
@@ -89,11 +88,6 @@
           res.status(400).json({ error: `Requested quantity for ${book.title} exceeds book stock` });
           return;
         }
-      }
-     } catch(error) {
-        res.status(500).json({ error: "BOOK ID DOES NOT EXIST" });
-        return;
-      }
 
         // Calculate the cost for this book and add it to the total cost
         totalCost += book.price * quantity;
@@ -103,7 +97,7 @@
           where: { id: bookId },
           data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
         });
-      
+      }
 
       
       if (user.balance >= totalCost) {
@@ -120,11 +114,11 @@
         res.status(400).json({ error: 'Insufficient balance' });
       }
 
+      
     } catch (error) {
       // If something went wrong during the process, return an error message
       res.status(500).json({ error: 'An error occurred while buying the book' });
     }
-
   };
 
     
