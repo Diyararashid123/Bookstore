@@ -106,13 +106,13 @@
           where: { clerkId: userId },
           data: { balance: user.balance - totalCost },
         });
-        
+
         for(let i = 0; i<cart.length; i++){
 
             // Create a new purchase in the database
        const newPurchase = await prisma.purchase.create({
         data: {
-          user: { connect: { id: userId } },
+          user: { connect: { clerkId: userId } },
           book: { connect: { id: bookId } },
           quantity,
         },
