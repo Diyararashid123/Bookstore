@@ -74,10 +74,11 @@
         // Find the corresponding book in the database
         const book = await prisma.book.findUnique({ where: { id: bookId } });
 
-        // // If the book doesn't exist, skip to the next item in the cart
-        // if (!book) {
-        //   res.status(404).jso({error: 'The book dosnt exist'})
-        // }
+        // If the book doesn't exist, skip to the next item in the cart
+        if (!book) {
+           res.status(404).jso({error: 'The book dosnt exist'})
+        }
+
 
         // Check if the quantity requested is more than the books stock
         if (book.stock < quantity) {
@@ -112,6 +113,16 @@
         // If the user doesn't have enough balance, return an error message
         res.status(400).json({ error: 'Insufficient balance' });
       }
+
+       // Create a new purchase in the database
+       const newPurchase = await prisma.purchase.create({
+        data: {
+          user: { connect: { id: userId } },
+          book: { connect: { id: bookId } },
+          quantity,
+        },
+      });
+    }
 
       
     } catch (error) {
