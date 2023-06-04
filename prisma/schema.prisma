@@ -27,8 +27,7 @@ datasource db {
     balance   Float     @default(500)
     purchases Purchase[]
     reviews     Review[]
-    wishlists Wishlist[] 
-    carts     Cart[]     
+    wishlists Wishlist[]     
     interactions Interaction[] 
   }
 
@@ -48,7 +47,6 @@ model Book {
   purchases    Purchase[]
   reviews      Review[]
   wishlists    Wishlist[]
-  carts        Cart[]
   category     Category[]
   totalSold    Int          @default(0) 
   stock        Int          @default(0)
@@ -109,14 +107,6 @@ model Book {
     book    Book      @relation(fields: [bookId], references: [id])
   }
 
-  model Cart {
-    id      Int       @id @default(autoincrement())
-    userId  Int
-    user    User      @relation(fields: [userId], references: [id])
-    bookId  Int
-    book    Book      @relation(fields: [bookId], references: [id])
-    quantity Int
-  }
 
 model Interaction {
   id      Int      @id @default(autoincrement())
