@@ -97,7 +97,7 @@
           data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
         });
       }
-      
+     
 
       
       if (user.balance >= totalCost) {
@@ -106,15 +106,10 @@
           where: { clerkId: userId },
           data: { balance: user.balance - totalCost },
         });
+        
+        for(let i = 0; i<cart.length; i++){
 
-        // Then return a successful purchase message
-        res.status(201).json({ message: 'Book purchase successful' });
-      } else {
-        // If the user doesn't have enough balance, return an error message
-        res.status(400).json({ error: 'Insufficient balance' });
-      }
-
-       // Create a new purchase in the database
+            // Create a new purchase in the database
        const newPurchase = await prisma.purchase.create({
         data: {
           user: { connect: { id: userId } },
@@ -122,7 +117,17 @@
           quantity,
         },
       });
-    }
+        }
+        // Then return a successful purchase message
+        res.status(201).json({ message: 'Book purchase successful' });
+      } else {
+        // If the user doesn't have enough balance, return an error message
+        res.status(400).json({ error: 'Insufficient balance' });
+      }
+
+      
+      
+    
 
       
     } catch (error) {
