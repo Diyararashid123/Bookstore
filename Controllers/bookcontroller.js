@@ -56,7 +56,7 @@
 
     try {
       // Find user in database
-      const user = await prisma.user.findUnique({ where: { clerkId: userId } });
+      const user = await prisma.user.findUnique({ where: { id: userId } });
 
       // Check if user exists
       if (!user) {
@@ -102,7 +102,7 @@
       if (user.balance >= totalCost) {
         // If they do update the user's balance in the database
         const updatedUser = await prisma.user.update({
-          where: { clerkId: userId },
+          where: { id: userId },
           data: { balance: user.balance - totalCost },
         });
 
