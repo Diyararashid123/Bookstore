@@ -56,7 +56,7 @@
 
     try {
       // Find user in database
-      const user = await prisma.user.findUnique({ where: { id: userId } });
+      const user = await prisma.user.findUnique({ where: { clerkId: userId } });
 
       // Check if user exists
       if (!user) {
@@ -67,6 +67,8 @@
       // Initialize total cost
       let totalCost = 0;
 
+
+      try{
       // Iterate over all items in the cart
       for (let i = 0; i < cart.length; i++) {
         // Extract book ID and quantity from the current cart item
@@ -75,10 +77,10 @@
         // Find the corresponding book in the database
         const book = await prisma.book.findUnique({ where: { id: bookId } });
 
-        // If the book doesn't exist, skip to the next item in the cart
-        if (!book) {
-          res.status(404).jso({error: 'The book dosnt exist'})
-        }
+        // // If the book doesn't exist, skip to the next item in the cart
+        // if (!book) {
+        //   res.status(404).jso({error: 'The book dosnt exist'})
+        // }
 
         // Check if the quantity requested is more than the books stock
         if (book.stock < quantity) {
@@ -87,6 +89,11 @@
           res.status(400).json({ error: `Requested quantity for ${book.title} exceeds book stock` });
           return;
         }
+      }
+     } catch(error) {
+        res.status(500).json({ error: "BOOK ID DOES NOT EXIST" });
+        return;
+      }
 
         // Calculate the cost for this book and add it to the total cost
         totalCost += book.price * quantity;
@@ -96,13 +103,13 @@
           where: { id: bookId },
           data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
         });
-      }
+      
 
       
       if (user.balance >= totalCost) {
         // If they do update the user's balance in the database
         const updatedUser = await prisma.user.update({
-          where: { id: userId },
+          where: { clerkId: userId },
           data: { balance: user.balance - totalCost },
         });
 
@@ -113,11 +120,11 @@
         res.status(400).json({ error: 'Insufficient balance' });
       }
 
-      
     } catch (error) {
       // If something went wrong during the process, return an error message
       res.status(500).json({ error: 'An error occurred while buying the book' });
     }
+
   };
 
     
