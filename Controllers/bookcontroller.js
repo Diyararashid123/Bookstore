@@ -119,7 +119,8 @@
       
     } catch (error) {
       // If something went wrong during the process, return an error message
-      res.status(500).json({ error: 'An error occurred while buying the book' });
+      console.error('Error details:', error); 
+      res.status(500).json({ error: error });
     }
   };
 
