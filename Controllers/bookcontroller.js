@@ -107,16 +107,22 @@
               data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
             });
       
-            // Create a new purchase in the database
-            const newPurchase = await prisma.purchase.create({
-              data: {
-                userId,
-                bookId,
-                quantity,
-                createdAt: new Date(),
-              },
-            });
+           
           }
+
+           // Create a new purchase in the database
+           const newPurchase = await prisma.purchase.create({
+            data: {
+              user,
+              book: {
+                connect: cart.map((book) => {
+                  return { id: book.id };
+                })
+              },
+              quantity,
+              createdAt: new Date(),
+            },
+          });
     
           // Then return a successful purchase message
           res.status(201).json({ message: 'Book purchase successful' });
