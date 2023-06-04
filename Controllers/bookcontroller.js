@@ -125,7 +125,7 @@
   const createBook = async (req, res) => {
     console.log('Request body:', req.body); // Log the request body
 
-    const { title, description, price, categories } = req.body;
+    const { title, description, price, categories, stock } = req.body;
 
     try {
       const currentDate = new Date();
@@ -133,6 +133,7 @@
       const newBook = await prisma.book.create({
         data: {
           title,
+          stock,
           description,
           price,
           releaseDate: currentDate,
@@ -153,11 +154,11 @@
 
     const updateBook = async (req, res) => {
       const { id } = req.params;
-      const { title, description, price, authorId, categoryId } = req.body;
+      const { title, description, price, authorId, categoryId, stock } = req.body;
       try {
         const updatedBook = await prisma.book.update({
           where: { id: parseInt(id) },
-          data: { title, description, price, authorId, categoryId },
+          data: { title, description, price, authorId, categoryId, stock},
         });
         res.status(200).json(updatedBook);
       } catch (error) {
