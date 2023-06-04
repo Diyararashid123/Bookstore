@@ -102,7 +102,7 @@
               userId,
               bookId,
               quantity,
-              purchaseDate: new Date(),
+              createdAt: new Date(),
             },
           });
         }

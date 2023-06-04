@@ -61,8 +61,8 @@ model Book {
       id        Int       @id @default(autoincrement())
       userId    Int
       bookId    Int
-      quantity  Int       // Added quantity field
-      createdAt DateTime  @default(now()) // Added createdAt field
+      quantity  Int       
+      createdAt DateTime  @default(now()) 
       user      User      @relation(fields: [userId], references: [id])
       book      Book      @relation(fields: [bookId], references: [id])
     }
