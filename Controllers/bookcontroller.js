@@ -89,17 +89,14 @@
 
         // Calculate the cost for this book and add it to the total cost
         totalCost += book.price * quantity;
-        try{
+        
         // Updat the book sold count and stock in the databas
         const updatedBook = await prisma.book.update({
           where: { id: bookId },
           data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
         });
-      } catch(error){
-        console.log(error);
-        res.status(400).json({error: "The one that we are searching for"});
-      }; 
       }
+      
 
       
       if (user.balance >= totalCost) {

@@ -40,7 +40,7 @@ datasource db {
 
 model Book {
   id           Int          @id @default(autoincrement())
-  title        String
+  title        String       @unique
   description  String?
   price        Float
   releaseDate  DateTime    
