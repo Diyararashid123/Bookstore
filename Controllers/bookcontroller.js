@@ -100,29 +100,35 @@
 
           for (let i = 0; i < cart.length; i++) {
             const { id: bookId, quantity } = cart[i];
+            const book = await prisma.book.findUnique({ where: { id: bookId } });
+            console.log(book)
     
              // Update the book sold count and stock in the database
              const updatedBook = await prisma.book.update({
               where: { id: bookId },
               data: { totalSold: book.totalSold + quantity, stock: book.stock - quantity },
             });
-      
+
+            const newPurchase = await prisma.purchase.create({
+              data: {
+                user: {
+                  connect:{
+                    clerkId: userId
+                  },
+                },
+                book:{
+                  connect:{
+                    id: book.id
+                  }
+                },
+                quantity,
+                createdAt: new Date(),
+              },
+            });
            
           }
 
-           // Create a new purchase in the database
-           const newPurchase = await prisma.purchase.create({
-            data: {
-              user,
-              book: {
-                connect: cart.map((book) => {
-                  return { id: book.id };
-                })
-              },
-              quantity,
-              createdAt: new Date(),
-            },
-          });
+
     
           // Then return a successful purchase message
           res.status(201).json({ message: 'Book purchase successful' });

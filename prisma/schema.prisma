@@ -57,13 +57,14 @@ model Book {
 }
 
   
-    model Purchase {
-      id        Int       @id @default(autoincrement())
-      quantity  Int       
-      createdAt DateTime  @default(now()) 
-      user     User[]
-      book     Book[]
-    }
+  model Purchase {
+    id        Int       @id @default(autoincrement())
+    quantity  Int       
+    createdAt DateTime  @default(now()) 
+    user      User[]
+    book      Book[]
+
+  }
 
 
   model Order {
