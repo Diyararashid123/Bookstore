@@ -14,7 +14,7 @@
   router.post('/categories/create', createCategory);
   router.put('/categories/:id', updateCategory);
   router.delete('/categories/:id', deleteCategory);
-  router.get('/categories/:name', getCategoryWithBooks);
+  router.get('/categories/:name,:name', getCategoryWithBooks);
 
   module.exports = router;
  

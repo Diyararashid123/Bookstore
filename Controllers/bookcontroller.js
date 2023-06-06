@@ -101,7 +101,7 @@
           for (let i = 0; i < cart.length; i++) {
             const { id: bookId, quantity } = cart[i];
             const book = await prisma.book.findUnique({ where: { id: bookId } });
-            console.log(book)
+
     
              // Update the book sold count and stock in the database
              const updatedBook = await prisma.book.update({
