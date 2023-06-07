@@ -22,23 +22,38 @@
     }
   };
 
-const getCategoryWithBooks = async (req, res) => {
-  const names = req.query.names.split(',');
-  try {
-    const categories = await Promise.all(names.map(name => 
-      prisma.category.findUnique({
-        where: { name: name },
-        include: { book: true },
-      })
-    ));
-    const books = categories.flatMap(category => category ? category.book : []);
-    res.status(200).json(books);
-  } catch (error) {
-    res.status(500).json({ error: "Error retrieving category and its books" });
-  }
-};
-
-
+  const getCategoryWithBooks = async (req, res) => {
+    const names = req.query.names.split(',');
+    try {
+      const categories = await Promise.all(names.map(name => 
+        prisma.category.findUnique({
+          where: { name: name },
+          include: { book: true },
+        })
+      ));
+      const books = categories.flatMap(category => category ? category.book : []);
+  
+      // Create a map of book ids and their corresponding count
+      const bookCountMap = new Map();
+      books.forEach(book => {
+        if (bookCountMap.has(book.id)) {
+          bookCountMap.set(book.id, bookCountMap.get(book.id) + 1);
+        } else {
+          bookCountMap.set(book.id, 1);
+        }
+      });
+  
+      // Sort the books by count in descending order and then map it back to book objects
+      const sortedBooks = Array.from(bookCountMap.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([id, _]) => books.find(book => book.id === id));
+  
+      res.status(200).json(sortedBooks);
+    } catch (error) {
+      res.status(500).json({ error: "Error retrieving category and its books" });
+    }
+  };
+  
 
 
   const updateCategory = async (req, res) => {
