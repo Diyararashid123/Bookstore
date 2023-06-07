@@ -43,37 +43,53 @@ const Cleark = async(req, res) => {
   }
 };
 
-const createInteraction = async (req, res) => {
-  console.log("Received request:", req.body);
-
-  const { userId, bookId, interactionCount } = req.body;
-
-  if (!userId || !bookId || !interactionCount) {
-    console.error("Missing userId, bookId or interactionCount");
-    res.status(400).json({ error: "Request must include userId, bookId and interactionCount" });
-    return;
-  }
+const createOrUpdateInteractions = async (req, res) => {
+  const { userId, interactions } = req.body;
 
   try {
-    console.log("Creating interaction for userId:", userId, "bookId:", bookId, "interactionCount:", interactionCount);
+    // Iterate over the interactions array
+    for (let i = 0; i < interactions.length; i++) {
+      const { id: bookId, interactionCount } = interactions[i];
 
-    // Repeat interaction creation based on the interactionCount
-    for(let i=0; i<interactionCount; i++){
-        await prisma.interaction.create({
-          data: {
-            userId,
-            bookId,
+      let interaction = await prisma.interaction.findFirst({
+        where: {
+          userId: userId,
+          bookId: bookId
+        }
+      });
+
+      if (interaction) {
+        // Interaction already exists, update the interaction count
+        interaction = await prisma.interaction.update({
+          where: {
+            id: interaction.id
           },
+          data: {
+            interactionCount: {
+              increment: interactionCount
+            }
+          }
         });
+      } else {
+        // Interaction does not exist, create a new one
+        interaction = await prisma.interaction.create({
+          data: {
+            userId: userId,
+            bookId: bookId,
+            interactionCount: interactionCount
+          }
+        });
+      }
     }
 
-    console.log("Created interactions");
-    res.status(201).json({ message: 'Interactions created' });
+    res.status(201).json({ message: 'Interactions updated successfully.' });
   } catch (error) {
-    console.error("Failed to create interaction:", error);
-    res.status(500).json({ error: 'Failed to create interaction' });
+    console.error("Failed to create or update interactions:", error);
+    res.status(500).json({ error: 'Failed to create or update interactions' });
   }
 };
+
+
 
 
 module.exports = {getUser, createUser, Cleark, createInteraction};
