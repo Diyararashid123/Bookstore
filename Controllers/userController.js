@@ -44,18 +44,36 @@ const Cleark = async(req, res) => {
 };
 
 const createInteraction = async (req, res) => {
-  const { userId, bookId } = req.body;
+  console.log("Received request:", req.body);
+
+  const { userId, bookId, interactionCount } = req.body;
+
+  if (!userId || !bookId || !interactionCount) {
+    console.error("Missing userId, bookId or interactionCount");
+    res.status(400).json({ error: "Request must include userId, bookId and interactionCount" });
+    return;
+  }
+
   try {
-    const newInteraction = await prisma.interaction.create({
-      data: {
-        userId,
-        bookId,
-      },
-    });
-    res.status(201).json(newInteraction);
+    console.log("Creating interaction for userId:", userId, "bookId:", bookId, "interactionCount:", interactionCount);
+
+    // Repeat interaction creation based on the interactionCount
+    for(let i=0; i<interactionCount; i++){
+        await prisma.interaction.create({
+          data: {
+            userId,
+            bookId,
+          },
+        });
+    }
+
+    console.log("Created interactions");
+    res.status(201).json({ message: 'Interactions created' });
   } catch (error) {
+    console.error("Failed to create interaction:", error);
     res.status(500).json({ error: 'Failed to create interaction' });
   }
 };
 
-module.exports = {getUser, createUser, Cleark, createInteraction };
+
+module.exports = {getUser, createUser, Cleark, createInteraction};
