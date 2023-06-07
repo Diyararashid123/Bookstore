@@ -85,7 +85,7 @@ const createInteraction = async (req, res) => {
     res.status(201).json({ message: 'Interactions updated successfully.' });
   } catch (error) {
     console.error("Failed to create or update interactions:", error);
-    res.status(500).json({ error: 'Failed to create or update interactions' });
+    res.status(400).json({ error: 'Failed to create or update interactions' });
   }
 };
 
