@@ -32,7 +32,7 @@
         })
       ));
       const books = categories.flatMap(category => category ? category.book : []);
-  
+    
       // Create a map of book ids and their corresponding count
       const bookCountMap = new Map();
       books.forEach(book => {
@@ -42,12 +42,14 @@
           bookCountMap.set(book.id, 1);
         }
       });
-  
+    
       // Sort the books by count in descending order and then map it back to book objects
+      // Only include books if their count matches the number of selected categories
       const sortedBooks = Array.from(bookCountMap.entries())
+        .filter(([_, count]) => count === names.length)
         .sort((a, b) => b[1] - a[1])
         .map(([id, _]) => books.find(book => book.id === id));
-  
+    
       res.status(200).json(sortedBooks);
     } catch (error) {
       res.status(500).json({ error: "Error retrieving category and its books" });
