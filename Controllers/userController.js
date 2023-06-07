@@ -43,7 +43,7 @@ const Cleark = async(req, res) => {
   }
 };
 
-const createOrUpdateInteractions = async (req, res) => {
+const createInteraction = async (req, res) => {
   const { userId, interactions } = req.body;
 
   try {
