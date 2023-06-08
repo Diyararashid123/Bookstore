@@ -11,7 +11,8 @@
     getLatestReleasedBooks,
     getMostWishedBooks,
     getTopSellingBooks,
-    getBookById
+    getBookById,
+    getSimilarBooks
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
@@ -28,4 +29,5 @@
   router.get('/books/Wished', getMostWishedBooks);
   router.get('/books/Sell', getTopSellingBooks);
   router.get('/book/:id', getBookById);
+  router.get('/books/similar',getSimilarBooks);
   module.exports = router;

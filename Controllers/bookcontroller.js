@@ -310,5 +310,42 @@
         res.status(500).json({ error: 'An error occurred while retrieving latest released books' });
       }
     };
+    const getSimilarBooks = async (req, res) => {
+      const { id } = req.params;
+      const limit = parseInt(req.query.limit) || 5; 
     
-    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById};
+      try {
+        const book = await prisma.book.findUnique({
+          where: { id: parseInt(id) },
+          include: { category: true }
+        });
+    
+        if (!book) {
+          return res.status(404).json({ error: `No book found with id: ${id}` });
+        }
+    
+        // Find books that share at least one category with the given book
+        const similarBooks = await prisma.book.findMany({
+          where: { 
+            category: {
+              some: {
+                id: {
+                  in: book.category.map(c => c.id),
+                },
+              },
+            },
+            id: {
+              not: parseInt(id) // exclude the book itself
+            }
+          },
+          take: limit
+        });
+    
+        return res.json(similarBooks);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while trying to fetch similar books' });
+      }
+    };
+    
+    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks};
