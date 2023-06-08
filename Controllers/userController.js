@@ -42,13 +42,14 @@ const Cleark = async(req, res) => {
     res.status(500).json({error: "Failed to save ID"})
   }
 };
+
 const createInteraction = async (req, res) => {
   const { userId: clerkId, interactions } = req.body;
 
   try {
     // Iterate over the interactions array
     for (let i = 0; i < interactions.length; i++) {
-      const { id: bookId, interactionsCount: interactionCount } = interactions[i];
+      const { id: bookId, interactionsCount } = interactions[i];
 
       let interaction = await prisma.interaction.findFirst({
         where: {
@@ -64,8 +65,8 @@ const createInteraction = async (req, res) => {
             id: interaction.id
           },
           data: {
-            interactionCount: {
-              increment: interactionCount
+            interactionsCount: {
+              increment: interactionsCount
             }
           }
         });
@@ -75,7 +76,7 @@ const createInteraction = async (req, res) => {
           data: {
             clerkId: clerkId,
             bookId: bookId,
-            interactionCount: interactionCount
+            interactionsCount: interactionsCount // Make sure it's interactionsCount here
           }
         });
       }

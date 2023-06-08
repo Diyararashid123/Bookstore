@@ -101,12 +101,12 @@ model Book {
     book    Book      @relation(fields: [bookId], references: [id])
   }
 
-
 model Interaction {
-  id       Int      @id @default(autoincrement())
-  clerkId  String
-  bookId   Int
-  user     User     @relation(fields: [clerkId], references: [clerkId])
-  book     Book     @relation(fields: [bookId], references: [id])
+  id                 Int      @id @default(autoincrement())
+  clerkId            String
+  bookId             Int
+  interactionsCount  Int
+  user               User     @relation(fields: [clerkId], references: [clerkId])
+  book               Book     @relation(fields: [bookId], references: [id])
 }
 
