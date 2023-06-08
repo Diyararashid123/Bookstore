@@ -298,7 +298,7 @@
     
     const getLatestReleasedBooks = async (req, res) => {
       try {
-        const { limit } = req.quary;
+        const { limit } = req.query;
         const books = await prisma.book.findMany({
           take: parseInt(limit) || undefined,
           orderBy: {
