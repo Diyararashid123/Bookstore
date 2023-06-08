@@ -29,5 +29,5 @@
   router.get('/books/Wished', getMostWishedBooks);
   router.get('/books/Sell', getTopSellingBooks);
   router.get('/book/:id', getBookById);
-  router.get('/books/similar',getSimilarBooks);
+  router.get('/books/similar/:id',getSimilarBooks);
   module.exports = router;
