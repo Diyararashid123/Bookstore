@@ -298,7 +298,7 @@
     
     const getLatestReleasedBooks = async (req, res) => {
       try {
-        const { limit } = req.body;
+        const { limit } = req.quary;
         const books = await prisma.book.findMany({
           take: parseInt(limit) || undefined,
           orderBy: {
@@ -310,6 +310,7 @@
         res.status(500).json({ error: 'An error occurred while retrieving latest released books' });
       }
     };
+
     const getSimilarBooks = async (req, res) => {
       const { id } = req.params;
       const limit = parseInt(req.query.limit) || 5; 
