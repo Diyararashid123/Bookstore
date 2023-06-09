@@ -5,7 +5,7 @@ const bookRoutes = require('./Routes/bookRoutes.js');
 const userRoutes = require('./Routes/userRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
-const reviewRoutes = require('./Routes/reviewRouter.js'); // assuming it's in a 'Routes' directory
+const reviewRoutes = require('./Routes/reviewRoutes.js'); // assuming it's in a 'Routes' directory
 
 
 const port = 3000;

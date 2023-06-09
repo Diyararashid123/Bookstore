@@ -1,16 +1,19 @@
-  // viewRouter.js
-  const express = require('express');
-  const {
-    createReview, 
-    deleteReview, 
-    getBookReviews
-  } = require('../Controllers/reviewcontroller.js'); // Adjust the path 
+    // viewRouter.js
+    const express = require('express');
+    const {
+      createReview, 
+      deleteReview, 
+      getBookReviews,
+      getBookAverageRating
+    } = require('../Controllers/reviewcontroller.js'); // Adjust the path 
 
-  const router = express.Router();
+    const router = express.Router();
 
-  // Review-related routes
-  router.post('/review/create', createReview);
-  router.delete('/review/delete/:id', deleteReview);
-  router.get('/review/:id', getBookReviews);
+    // Review-related routes
+    router.post('/review/create', createReview);
+    router.delete('/review/delete/:id', deleteReview);
+    router.get('/review/:id', getBookReviews);
+    router.get('/review/:id', getBookAverageRating);
 
-  module.exports = router;
+
+    module.exports = router;
