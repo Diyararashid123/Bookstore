@@ -268,7 +268,7 @@
     
     const getMostPopularBooks = async (req, res) => {
       try {
-        const { limit } = req.body;
+        const { limit } = req.query;
         const books = await prisma.book.findMany({
           take: parseInt(limit) || undefined,
           orderBy: {
@@ -283,7 +283,7 @@
     
     const getMostWishedBooks = async (req, res) => {
       try {
-        const { limit } = req.body;
+        const { limit } = req.query;
         const books = await prisma.book.findMany({
           take: parseInt(limit) || undefined,
           orderBy: {

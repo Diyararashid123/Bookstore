@@ -5,6 +5,7 @@ const bookRoutes = require('./Routes/bookRoutes.js');
 const userRoutes = require('./Routes/userRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
+const reviewRoutes = require('../Controllers/reviewcontroller.js');
 
 const port = 3000;
 const app = express();
@@ -29,6 +30,7 @@ app.use(bookRoutes);
 app.use(userRoutes);
 app.use(wishlistRoutes);
 app.use(categoryRoutes);
+app.use(reviewRoutes);
 
 // Error-handling middleware
 app.use((err, req, res, next) => {

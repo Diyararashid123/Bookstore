@@ -55,7 +55,6 @@
       res.status(500).json({ error: "Error retrieving category and its books" });
     }
   };
-  
 
 
   const updateCategory = async (req, res) => {
