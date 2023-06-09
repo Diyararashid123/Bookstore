@@ -4,6 +4,11 @@ const prisma = new PrismaClient();
 
 const createReview = async (req, res) => {
   const { bookId, userId, rating, comment } = req.body;
+  // Validate the rating
+  if (rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+  }
+  
   try {
     const review = await prisma.review.create({
       data: {
