@@ -13,7 +13,7 @@
     router.post('/review/create', createReview);
     router.delete('/review/delete/:id', deleteReview);
     router.get('/review/:id', getBookReviews);
-    router.get('/review/:id', getBookAverageRating);
+    router.get('/review/average/:id', getBookAverageRating);
 
 
     module.exports = router;
