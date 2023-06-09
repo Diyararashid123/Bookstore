@@ -47,36 +47,20 @@ const getBookReviews = async (req, res) => {
       where: {
         bookId: parseInt(id),
       },
+      select: {
+        rating: true, // Select only the rating field
+      },
     });
-    res.status(200).json(reviews);
+    
+    const averageRating =
+      reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
+
+    res.status(200).json(averageRating);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch reviews' });
   }
 };
 
-const getBookAverageRating = async (req, res) => {
-  const { id } = req.params;
 
-  // Fetch all reviews of the book
-  try {
-    const reviews = await prisma.review.findMany({
-      where: {
-        bookId: parseInt(id),
-      },
-      select: {
-        rating: true, // Select only the rating field
-      },
-    });
-
-    // Calculate the average rating
-    const averageRating =
-      reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
-
-    res.status(200).json({ averageRating });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to fetch average rating' });
-  }
-};
-module.exports = {createReview, deleteReview, getBookReviews, getBookAverageRating};
+module.exports = {createReview, deleteReview, getBookReviews,};
