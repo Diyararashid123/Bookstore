@@ -5,7 +5,8 @@ const bookRoutes = require('./Routes/bookRoutes.js');
 const userRoutes = require('./Routes/userRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
-const reviewRoutes = require('../Controllers/reviewcontroller.js');
+const reviewRoutes = require('./Routes/viewRouter.js'); // assuming it's in a 'Routes' directory
+
 
 const port = 3000;
 const app = express();
