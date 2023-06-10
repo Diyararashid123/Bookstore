@@ -2,6 +2,8 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+
+
 const createReview = async (req, res) => {
   const { bookId, userId, rating, comment } = req.body;
   // Validate the rating
@@ -13,10 +15,13 @@ const createReview = async (req, res) => {
     // Check if the user has already reviewed this book
     const existingReview = await prisma.review.findFirst({
       where: {
-        userId: userId,
+        user: {
+          clerkId: userId
+        },
         bookId: parseInt(bookId),
       },
     });
+    
 
     // If a review exists, return an error
     if (existingReview) {
@@ -43,7 +48,6 @@ const createReview = async (req, res) => {
     res.status(500).json({ error: 'Failed to create review' });
   }
 };
-
 
 const deleteReview = async (req, res) => {
   const { id } = req.params;
