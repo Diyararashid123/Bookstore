@@ -23,7 +23,6 @@ const addToWishlist = async (req, res) => {
       data: {
         clerkId: user.clerkId,
         bookId: parseInt(bookId),
-        userId: user.id,
       },
     });
     console.log(wishlistItem);

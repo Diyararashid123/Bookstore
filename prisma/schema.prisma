@@ -84,13 +84,14 @@ model Book {
     createdAt DateTime  @default(now())
   }
 
-  model Wishlist {
+model Wishlist {
   id                 Int      @id @default(autoincrement())
   clerkId            String
   bookId             Int
-  user               User     @relation(fields: [clerkId], references: [clerkId])
+  userId               User     @relation(fields: [clerkId], references: [clerkId])
   book               Book     @relation(fields: [bookId], references: [id])
-  }
+}
+
 
 model Interaction {
   id                 Int      @id @default(autoincrement())
