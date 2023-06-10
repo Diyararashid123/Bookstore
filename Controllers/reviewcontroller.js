@@ -8,8 +8,21 @@ const createReview = async (req, res) => {
   if (rating < 1 || rating > 5) {
     return res.status(400).json({ error: 'Rating must be between 1 and 5' });
   }
-  
+
   try {
+    // Check if the user has already reviewed this book
+    const existingReview = await prisma.review.findFirst({
+      where: {
+        userId: userId,
+        bookId: parseInt(bookId),
+      },
+    });
+
+    // If a review exists, return an error
+    if (existingReview) {
+      return res.status(400).json({ error: 'You have already reviewed this book' });
+    }
+
     const review = await prisma.review.create({
       data: {
         user: {
@@ -23,12 +36,14 @@ const createReview = async (req, res) => {
         createdAt: new Date(),
       },
     });
+
     res.status(201).json(review);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to create review' });
   }
 };
+
 
 const deleteReview = async (req, res) => {
   const { id } = req.params;
