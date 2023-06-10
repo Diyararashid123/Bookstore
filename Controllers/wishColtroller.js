@@ -22,7 +22,7 @@ const addToWishlist = async (req, res) => {
     const wishlistItem = await prisma.wishlist.create({
       data: {
         clerkId: user.clerkId,
-        bookId: bookId,
+        bookId: parseInt(bookId),
         userId: user.id,
       },
     });
