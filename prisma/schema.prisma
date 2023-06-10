@@ -10,19 +10,10 @@ datasource db {
     provider = "prisma-client-js"
   }
 
-  model Post {
-    id        Int     @id @default(autoincrement())
-    title     String
-    content   String?
-    published Boolean @default(false)
-    author    User?   @relation(fields: [authorId], references: [id])
-    authorId  Int?
-  }
 
   model User {
     id      Int       @id @default(autoincrement())
     clerkId String       @unique
-    posts   Post[]
     orders  Order[]   
     balance   Float     @default(500)
     purchases Purchase[]
@@ -94,12 +85,11 @@ model Book {
   }
 
   model Wishlist {
-    id      Int       @id @default(autoincrement())
-    clerkId String
-    userId  Int
-    user    User      @relation(fields: [clerkId], references: [clerkId])
-    bookId  Int
-    book    Book      @relation(fields: [bookId], references: [id])
+  id                 Int      @id @default(autoincrement())
+  clerkId            String
+  bookId             Int
+  user               User     @relation(fields: [clerkId], references: [clerkId])
+  book               Book     @relation(fields: [bookId], references: [id])
   }
 
 model Interaction {

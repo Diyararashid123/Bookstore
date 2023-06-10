@@ -5,18 +5,36 @@ const prisma = new PrismaClient();
 
 const addToWishlist = async (req, res) => {
   const { userId, bookId } = req.body;
+
+  // Find the user with the given clerkId
+  const user = await prisma.user.findUnique({
+    where: {
+      clerkId: userId
+    }
+  });
+
+  // Check if the user was found
+  if (!user) {
+    return res.status(400).json({ error: 'User not found' });
+  }
+
   try {
     const wishlistItem = await prisma.wishlist.create({
       data: {
-        user: { connect: { clerkId: userId } },
-        book: { connect: { id: bookId } },
+        clerkId: user.clerkId,
+        bookId: bookId,
+        userId: user.id,
       },
     });
+    console.log(wishlistItem);
     res.status(201).json(wishlistItem);
   } catch (error) {
-    res.status(500).json({ error: 'Error adding book to wishlist' });
+    console.log(error);
+    res.status(500).json({ error: error});
   }
 };
+
+
 
 const removeFromWishlist = async (req, res) => {
   const { id } = req.params;
