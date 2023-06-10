@@ -4,11 +4,11 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const addToWishlist = async (req, res) => {
-  const { clerkId, bookId } = req.body;
+  const { userId, bookId } = req.body;
   try {
     const wishlistItem = await prisma.wishlist.create({
       data: {
-        user: { connect: { id: clerkId } },
+        user: { connect: { clerkId: userId } },
         book: { connect: { id: bookId } },
       },
     });
