@@ -95,8 +95,9 @@ model Book {
 
   model Wishlist {
     id      Int       @id @default(autoincrement())
+    clerkId String
     userId  Int
-    user    User      @relation(fields: [userId], references: [id])
+    user    User      @relation(fields: [clerkId], references: [clerkId])
     bookId  Int
     book    Book      @relation(fields: [bookId], references: [id])
   }
