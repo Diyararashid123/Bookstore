@@ -87,6 +87,7 @@ const getBookReviews = async (req, res) => {
       rating: review.rating,
       comment: review.comment,
       username: review.user.username,
+      profileimageurl: review.user.profileimageurl
     }));
 
     const averageRating =
