@@ -37,6 +37,7 @@ const Cleark = async(req, res) => {
       data: {
         clerkId: data.id,
         username: data.username,
+        profileimageurl: data.profile_image_url,
       },
     });
     res.status(201).json({message:`Successfully saved user with ID: ${data.id}`});

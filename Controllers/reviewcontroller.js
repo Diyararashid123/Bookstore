@@ -77,6 +77,7 @@ const getBookReviews = async (req, res) => {
         user: {
           select: {
             username: true,
+            profile_image_url: true
           },
         },
       },

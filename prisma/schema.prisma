@@ -36,7 +36,8 @@ model Book {
   title        String       @unique
   description  String?
   price        Float
-  releaseDate  DateTime    
+  releaseDate  DateTime
+  coverurl      String    
   purchases    Purchase[]
   reviews      Review[]
   wishlists    Wishlist[]
