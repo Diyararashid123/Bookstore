@@ -6,6 +6,7 @@ datasource db {
   url               = env("DATABASE_URL")
   directUrl         = env("DIRECT_URL")
 }
+
   generator client {
     provider = "prisma-client-js"
   }
@@ -16,6 +17,7 @@ datasource db {
     clerkId String       @unique 
     balance   Float     @default(500)
     username  String
+    profileimageurl String
     purchases Purchase[]
     reviews     Review[]
     wishlists Wishlist[]     
