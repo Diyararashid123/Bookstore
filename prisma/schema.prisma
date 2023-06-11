@@ -37,7 +37,7 @@ model Book {
   description  String?
   price        Float
   releaseDate  DateTime
-  coverurl      String    
+  coverurl      String?
   purchases    Purchase[]
   reviews      Review[]
   wishlists    Wishlist[]
