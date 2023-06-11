@@ -72,14 +72,26 @@ const getBookReviews = async (req, res) => {
         bookId: parseInt(id),
       },
       select: {
-        rating: true, // Select only the rating field
+        rating: true,
+        comment: true,
+        user: {
+          select: {
+            username: true,
+          },
+        },
       },
     });
-    
+
+    const reviewsWithUsername = reviews.map(review => ({
+      rating: review.rating,
+      comment: review.comment,
+      username: review.user.username,
+    }));
+
     const averageRating =
       reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 
-    res.status(200).json(averageRating);
+    res.status(200).json({ averageRating, reviews: reviewsWithUsername });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Failed to fetch reviews' });

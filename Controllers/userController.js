@@ -1,5 +1,6 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
@@ -34,7 +35,8 @@ const Cleark = async(req, res) => {
   try{
     const newUser = await prisma.user.create({
       data: {
-        clerkId: data.id
+        clerkId: data.id,
+        username: data.username,
       },
     });
     res.status(201).json({message:`Successfully saved user with ID: ${data.id}`});
