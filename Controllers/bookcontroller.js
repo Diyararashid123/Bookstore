@@ -36,6 +36,48 @@
       }
     };
     
+    const getBookRecommendations = async (req, res) => {
+      const { categories, excludeBookIds, limit } = req.query;
+    
+      // Convert categories and excludeBookIds strings to arrays
+      const categoriesArray = categories ? categories.split(',') : [];
+      const excludeBookIdsArray = excludeBookIds ? excludeBookIds.split(',').map(Number) : [];
+    
+      // Convert limit string to number
+      const limitNumber = limit ? Number(limit) : 5; // If no limit is provided, default to 5
+    
+      try {
+        // Fetch books in the same categories
+        const recommendedBooks = await prisma.book.findMany({
+          where: {
+            category: {
+              some: {
+                id: {
+                  in: categoriesArray,
+                },
+              },
+            },
+            // Exclude books the user has already seen
+            id: {
+              notIn: excludeBookIdsArray,
+            },
+          },
+          take: limitNumber, // Use the limit provided by the frontend
+        });
+    
+        res.status(200).json(recommendedBooks);
+      } catch (error) {
+        console.error('Error details:', error);
+        res.status(500).json({ error: 'An error occurred while fetching book recommendations' });
+      }
+    };
+    
+    // Export the function
+    module.exports.getBookRecommendations = getBookRecommendations;
+    
+
+
+
     const getBookById = async (req, res) => {
       const { id } = req.params;
       try {
@@ -349,4 +391,4 @@
       }
     };
     
-    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks};
+    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations};
