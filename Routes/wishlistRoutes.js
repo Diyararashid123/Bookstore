@@ -7,8 +7,8 @@ const {
 } = require('../Controllers/wishColtroller.js'); // Adjust the path
 
 const router = express.Router();
-router.get("/book/getWishlist/:id", getWishlistByUserId);
-router.post('/addwishlist/add', addToWishlist);
+router.get("/wishlist/:id", getWishlistByUserId);
+router.post('/wishlist/add', addToWishlist);
 router.delete('/wishlist/remove/:id', removeFromWishlist);
 
 module.exports = router;
