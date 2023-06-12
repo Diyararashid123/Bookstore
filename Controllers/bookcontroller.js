@@ -35,32 +35,62 @@
         res.status(500).json({ error: "There is no book " });
       }
     };
-    
+
     const getBookRecommendations = async (req, res) => {
-      const { categories, excludeBookIds, limit } = req.query;
-    
-      // Convert categories and excludeBookIds strings to arrays
-      const categoriesArray = categories ? categories.split(',') : [];
-      const excludeBookIdsArray = excludeBookIds ? excludeBookIds.split(',').map(Number) : [];
+      const { userId, limit } = req.query;
     
       // Convert limit string to number
       const limitNumber = limit ? Number(limit) : 5; // If no limit is provided, default to 5
     
       try {
-        // Fetch books in the same categories
+        // Fetch user interactions
+        const userInteractions = await prisma.interaction.findMany({
+          where: {
+            clerkId: userId
+          },
+          include: {
+            book: {
+              select: {
+                category: true
+              }
+            }
+          }
+        });
+    
+        // Determine the most interacted categories
+        let categoryCount = {};
+        for (let interaction of userInteractions) {
+          for (let category of interaction.book.category) {
+            if (categoryCount[category.id]) {
+              categoryCount[category.id]++;
+            } else {
+              categoryCount[category.id] = 1;
+            }
+          }
+        }
+    
+        // Get the category with maximum interactions
+        let maxCount = 0;
+        let maxCategory;
+        for (let category in categoryCount) {
+          if (categoryCount[category] > maxCount) {
+            maxCount = categoryCount[category];
+            maxCategory = category;
+          }
+        }
+    
+        // Fetch books in the most interacted category
         const recommendedBooks = await prisma.book.findMany({
           where: {
             category: {
               some: {
-                id: {
-                  in: categoriesArray,
-                },
-              },
+                id: maxCategory
+              }
             },
-            // Exclude books the user has already seen
+            // Exclude books the user has already interacted with
             id: {
-              notIn: excludeBookIdsArray,
-            },
+              notIn: userInteractions.map(interaction => interaction.bookId)
+            }
           },
           take: limitNumber, // Use the limit provided by the frontend
         });
@@ -71,7 +101,11 @@
         res.status(500).json({ error: 'An error occurred while fetching book recommendations' });
       }
     };
-
+    
+    // Export the function
+    module.exports.getBookRecommendations = getBookRecommendations;
+    
+    
     const getBookById = async (req, res) => {
       const { id } = req.params;
       try {
