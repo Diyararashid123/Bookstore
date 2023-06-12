@@ -13,7 +13,8 @@
     getTopSellingBooks,
     getBookById,
     getSimilarBooks,
-    getBookRecommendations
+    getBookRecommendations,
+    getFeaturedBooks
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
@@ -26,10 +27,11 @@
   router.put('/book/update/:id', updateBook);
   router.delete('/book/delete/:id', deleteBook);
   router.get('/books/popular', getMostPopularBooks);
-  router.get('/books/Latest', getLatestReleasedBooks);
-  router.get('/books/Wished', getMostWishedBooks);
-  router.get('/books/Sell', getTopSellingBooks);
+  router.get('/books/latest', getLatestReleasedBooks);
+  router.get('/books/topwished', getMostWishedBooks);
+  router.get('/books/sell', getTopSellingBooks);
   router.get('/book/:id', getBookById);
   router.get('/books/similar/:id',getSimilarBooks);
-  router.get('/books/recommend',getBookRecommendations)
+  router.get('/books/recommended',getBookRecommendations)
+  router.get('/books/featured',getFeaturedBooks)
   module.exports = router;

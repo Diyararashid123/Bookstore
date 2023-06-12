@@ -84,7 +84,7 @@
           where: {
             category: {
               some: {
-                id: maxCategory
+                id: parseInt(maxCategory)
               }
             },
             // Exclude books the user has already interacted with
@@ -101,9 +101,7 @@
         res.status(500).json({ error: 'An error occurred while fetching book recommendations' });
       }
     };
-    
-    // Export the function
-    module.exports.getBookRecommendations = getBookRecommendations;
+
     
     
     const getBookById = async (req, res) => {
@@ -320,13 +318,19 @@
     }
   };
 
-    
     const getTopSellingBooks = async (req, res) => {
       try {
         const { limit } = req.body;
+
         const books = await prisma.book.findMany({
+          where: {
+            totalSold: {
+              gt: 0 // Only include books where totalSold is greater than 0
+            }
+          },
           take: parseInt(limit) || undefined,
           orderBy: {
+            
             totalSold: 'desc',
           },
         });
@@ -419,4 +423,17 @@
       }
     };
     
-    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations};
+    const getFeaturedBooks = async () => {
+      try {
+        const featuredBooks = await prisma.book.findMany({
+          where: {
+            featured: true
+          }
+        });
+    
+        return featuredBooks;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations, getFeaturedBooks};
