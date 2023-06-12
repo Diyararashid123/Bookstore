@@ -71,12 +71,6 @@
         res.status(500).json({ error: 'An error occurred while fetching book recommendations' });
       }
     };
-    
-    // Export the function
-    module.exports.getBookRecommendations = getBookRecommendations;
-    
-
-
 
     const getBookById = async (req, res) => {
       const { id } = req.params;
