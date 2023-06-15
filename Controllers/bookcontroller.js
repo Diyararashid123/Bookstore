@@ -423,17 +423,22 @@
       }
     };
     
-    const getFeaturedBooks = async () => {
+    const getFeaturedBooks = async (req, res) => {
       try {
         const featuredBooks = await prisma.book.findMany({
           where: {
-            featured: true
-          }
+            featured: true,
+          },
+          orderBy: {
+            id: 'asc',
+          },
         });
     
-        return featuredBooks;
+        return res.json(featuredBooks);
       } catch (error) {
         console.error(error);
+        // Handle error
       }
     };
+
     module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations, getFeaturedBooks};

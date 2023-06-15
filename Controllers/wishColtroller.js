@@ -34,11 +34,29 @@ const addToWishlist = async (req, res) => {
   }
 };
 
-
-
 const removeFromWishlist = async (req, res) => {
-  const { id } = req.params;
+  const {userId, id} = req.params;
+
+  // Find the user with the given clerkId
+  const user = await prisma.user.findUnique({
+    where: {
+      clerkId: userId
+    }
+  });
+
+  // Check if the user was found
+  if (!user) {
+    return res.status(400).json({ error: 'User not found' });
+  }
+
   try {
+    const wishlistItem = await prisma.wishlist.findUnique({ where: { id: parseInt(id) } });
+
+    // Check if the wishlist item belongs to the user
+    if(wishlistItem.userId !== user.id){
+      return res.status(403).json({ error: 'This book does not belong to the user\'s wishlist' });
+    }
+
     await prisma.wishlist.delete({ where: { id: parseInt(id) } });
     res.status(204).send();
   } catch (error) {
@@ -46,8 +64,9 @@ const removeFromWishlist = async (req, res) => {
   }
 };
 
+
 const getWishlistByUserId = async (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.body;
   try {
     const wishlistItems = await prisma.wishlist.findMany({
       where: { clerkId: parseInt(userId) },

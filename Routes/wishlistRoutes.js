@@ -10,5 +10,4 @@ const router = express.Router();
 router.get("/wishlist/:id", getWishlistByUserId);
 router.post('/wishlist/add', addToWishlist);
 router.delete('/wishlist/remove/:id', removeFromWishlist);
-
 module.exports = router;
