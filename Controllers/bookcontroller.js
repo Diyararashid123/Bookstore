@@ -209,7 +209,7 @@
         console.error('Error details:', error); 
         res.status(500).json({ error: error})
       };
-    }
+    };
     
     
   const createBook = async (req, res) => {
@@ -241,6 +241,37 @@
       res.status(500).json({ error: error });
     }
   };
+
+
+  const getPurchaseHistory = async (req, res) => {
+    const { userId } = req.params;
+    
+    try {
+      // Find purchases made by the user
+      const purchases = await prisma.purchase.findMany({
+        where: {
+          user: {
+            some: {
+              clerkId: userId
+            }
+          }
+        },
+        include: {
+          book: true
+        },
+      });
+  
+      if(purchases.length === 0) {
+        return res.status(404).json({ message: 'No purchases found for this user' });
+      }
+  
+      res.status(200).json(purchases);
+    } catch (error) {
+      console.error('Error details:', error);
+      res.status(500).json({ error: 'An error occurred while fetching the purchase history' });
+    }
+  };
+  
 
     const updateBook = async (req, res) => {
       const { id } = req.params;
@@ -441,4 +472,4 @@
       }
     };
 
-    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations, getFeaturedBooks};
+    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations, getFeaturedBooks, getPurchaseHistory};

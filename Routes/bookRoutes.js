@@ -14,7 +14,8 @@
     getBookById,
     getSimilarBooks,
     getBookRecommendations,
-    getFeaturedBooks
+    getFeaturedBooks,
+    getPurchaseHistory
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
@@ -34,4 +35,5 @@
   router.get('/books/similar/:id',getSimilarBooks);
   router.get('/books/recommended',getBookRecommendations)
   router.get('/books/featured',getFeaturedBooks)
+  router.get('/books/:id/purchases', getPurchaseHistory)
   module.exports = router;

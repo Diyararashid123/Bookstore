@@ -65,8 +65,9 @@ const removeFromWishlist = async (req, res) => {
 };
 
 
+
 const getWishlistByUserId = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.params;
   try {
     const wishlistItems = await prisma.wishlist.findMany({
       where: { clerkId: parseInt(userId) },
