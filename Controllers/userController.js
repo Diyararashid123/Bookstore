@@ -60,6 +60,7 @@ const createInteraction = async (req, res) => {
           bookId: bookId
         }
       });
+      const appendviews = async()
 
       if (interaction) {
         // Interaction already exists, update the interaction count

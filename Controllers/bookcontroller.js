@@ -168,7 +168,7 @@
 
           for (let i = 0; i < cart.length; i++) {
             const { id: bookId, quantity } = cart[i];
-            const book = await prisma.book.findUnique({ where: { id: bookId } });
+            const book = await prisma.book.findUnique({ where: { id: bookId} });
 
     
              // Update the book sold count and stock in the database
@@ -194,13 +194,13 @@
               },
             });
            
-          }
-
-
+          } 
+          console.log(cart);
     
           // Then return a successful purchase message
           res.status(201).json({ message: 'Book purchase successful' });
         } else {
+          console.log(newPurchase);
           // If the user doesn't have enough balance, return an error message
           res.status(400).json({ error: 'Insufficient balance' });
         }

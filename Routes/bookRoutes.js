@@ -33,7 +33,7 @@
   router.get('/books/sell', getTopSellingBooks);
   router.get('/book/:id', getBookById);
   router.get('/books/similar/:id',getSimilarBooks);
-  router.get('/books/recommended',getBookRecommendations)
-  router.get('/books/featured',getFeaturedBooks)
-  router.get('/books/:id/purchases', getPurchaseHistory)
+  router.get('/books/recommended',getBookRecommendations);
+  router.get('/books/featured',getFeaturedBooks);
+  router.get('/books/:id/purchases', getPurchaseHistory);
   module.exports = router;

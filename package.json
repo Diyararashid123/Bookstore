@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^4.10.7",
     "@prisma/client": "^4.13.0",
     "cors": "^2.8.5",
     "express": "^4.18.2"
