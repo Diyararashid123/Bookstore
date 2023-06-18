@@ -57,7 +57,6 @@ model Book {
     createdAt DateTime  @default(now()) 
     user      User[]
     book      Book[]
-    price     Float
   }
 
 
