@@ -25,7 +25,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-app.get('/review/create', ClerkExpressWithAuth({jwtKey: 'https://desired-foal-13.clerk.accounts.dev/.well-known/jwks.json'}), (req, res) => {
+app.get('/review/create', ClerkExpressWithAuth(), (req, res) => {
   res.json(req.auth);
 });
 
