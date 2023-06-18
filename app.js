@@ -6,7 +6,7 @@ const userRoutes = require('./Routes/userRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
 const reviewRoutes = require('./Routes/reviewRoutes.js');
-const { ClerkExpressWithAuth } = require ("@clerk/clerk-sdk-node");
+
 
 const port = 3000;
 const app = express();
