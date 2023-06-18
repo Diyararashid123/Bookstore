@@ -4,19 +4,21 @@
     const prisma = new PrismaClient();
 
     const getAllBooks = async (req, res) => {
-      // Extract limit, skip and sortBy from request query parameters
-      const { limit, skip, sortBy } = req.query;
+      const { page = 1, limit = 10, sortBy } = req.query;
     
       const sortOptions = {
-        'mostPopular': { totalSold: 'desc' },
-        'topSelling': { price: 'desc' },
-        'mostWished': {}, 
-        'latestReleases': { releaseDate: 'desc' },
+        mostPopular: { totalSold: 'desc' },
+        topSelling: { price: 'desc' },
+        mostWished: {},
+        latestReleases: { releaseDate: 'desc' },
       };
     
-      let orderBy = sortOptions[sortBy] || {};  // If sortBy is not provided, no sorting is applied
+      const orderBy = sortOptions[sortBy] || {};
     
       try {
+        const totalCount = await prisma.book.count();
+        const totalPages = Math.ceil(totalCount / limit);
+    
         const books = await prisma.book.findMany({
           include: {
             category: {
@@ -25,17 +27,26 @@
               },
             },
           },
-          take: parseInt(limit) || undefined, // If limit is not provided, fetch all records
-          skip: parseInt(skip) || undefined,  // If skip is not provided, start from the first record
-          orderBy
+          take: parseInt(limit),
+          skip: (parseInt(page) - 1) * parseInt(limit),
+          orderBy,
         });
-        res.status(200).json(books);
+    
+        res.status(200).json({
+          books,
+          totalPages,
+          currentPage: parseInt(page),
+          totalCount,
+        });
       } catch (error) {
-        console.log(error)
-        res.status(500).json({ error: "There is no book " });
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred while fetching books' });
       }
     };
 
+
+
+    
     const getBookRecommendations = async (req, res) => {
       const { userId, limit } = req.query;
     

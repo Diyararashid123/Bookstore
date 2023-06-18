@@ -25,10 +25,6 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-app.get('/review/create', ClerkExpressWithAuth(), (req, res) => {
-  res.json(req.auth);
-});
-
 app.use(cors(corsOptions));
 app.use(express.json());
 

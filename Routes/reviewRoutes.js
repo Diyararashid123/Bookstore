@@ -1,5 +1,6 @@
     // viewRouter.js
     const express = require('express');
+    const { ClerkExpressWithAuth } = require ("@clerk/clerk-sdk-node");
     const {
       createReview, 
       deleteReview, 
@@ -7,9 +8,10 @@
     } = require('../Controllers/reviewcontroller.js'); // Adjust the path 
 
     const router = express.Router();
+   
 
     // Review-related routes
-    router.post('/review/create', createReview);
+    router.post('/review/create', ClerkExpressWithAuth(), createReview);
     router.delete('/review/delete/:id', deleteReview);
     router.get('/review/:id', getBookReviews);
 
