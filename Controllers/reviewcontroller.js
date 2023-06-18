@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const createReview = async (req, res) => {
   const { bookId, userId, rating, comment } = req.body;
 
-  const authUserId = req.auth.userId;
+  // const authUserId = req.auth.userId;
 
   // if(authUserId != userId) {
   //   return res.status(401).json({ error: 'You cannot give a review as another user' });
