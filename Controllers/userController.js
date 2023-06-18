@@ -81,4 +81,4 @@ const createInteraction = async (req, res) => {
 
 
 
-module.exports = {getUser, createUser, Cleark, createInteraction};
+module.exports = {getUser, Cleark, createInteraction};
