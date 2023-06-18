@@ -3,6 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 const createReview = async (req, res) => {
+  return res.status(200).json({error: 'Im here hold my hands'});
   const { bookId, userId, rating, comment } = req.body;
 
   const authUserId = req.auth.userId;
