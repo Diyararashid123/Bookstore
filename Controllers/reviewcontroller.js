@@ -2,10 +2,19 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-
-
 const createReview = async (req, res) => {
   const { bookId, userId, rating, comment } = req.body;
+
+  // if (!user) {
+  //   return res.status(400).json({ error: 'User not found' });
+  // }
+
+  const authUserId = req.auth.userId;
+
+  if(authUserId !== userId) {
+    return res.status(401).json({ error: 'You cannot give a review as another user' });
+  }
+
   // Validate the rating
   if (rating < 1 || rating > 5) {
     return res.status(400).json({ error: 'Rating must be between 1 and 5' });
@@ -15,27 +24,21 @@ const createReview = async (req, res) => {
     // Check if the user has already reviewed this book
     const existingReview = await prisma.review.findFirst({
       where: {
-        user: {
-          clerkId: userId
-        },
+        userId: userId,  //Check for reviews by the authenticated user
         bookId: parseInt(bookId),
       },
     });
-    
 
     // If a review exists, return an error
     if (existingReview) {
       return res.status(400).json({ error: 'You have already reviewed this book' });
     }
 
+    // Create the review
     const review = await prisma.review.create({
       data: {
-        user: {
-          connect: { clerkId: userId },
-        },
-        book: {
-          connect: { id: parseInt(bookId) },
-        },
+        userId: userId,  //Assign the review to the authenticated user
+        bookId: parseInt(bookId),
         rating: rating,
         comment: comment,
         createdAt: new Date(),
