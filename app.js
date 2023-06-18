@@ -6,7 +6,7 @@ const userRoutes = require('./Routes/userRoutes.js');
 const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
 const reviewRoutes = require('./Routes/reviewRoutes.js');
-const { withSession } = require('@clerk/clerk-sdk-node');
+const { ClerkExpressWithAuth } = require ("@clerk/clerk-sdk-node");
 
 const port = 3000;
 const app = express();
@@ -25,7 +25,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-app.get('/review/create', ClerkExpressRequireAuth({jwtKey}), (req, res) => {
+app.get('/review/create', ClerkExpressWithAuth({jwtKey: 'https://desired-foal-13.clerk.accounts.dev/.well-known/jwks.json'}), (req, res) => {
   res.json(req.auth);
 });
 
@@ -37,15 +37,6 @@ app.use(userRoutes);
 app.use(wishlistRoutes);
 app.use(categoryRoutes);
 app.use(reviewRoutes);
-
-// Add a protected endpoint
-app.get('/protected-endpoint', clerkMiddleware, (req, res) => {
-  if (req.session) {
-    res.json(req.session.claims);
-  } else {
-    res.status(401).send('Unauthenticated!');
-  }
-});
 
 // Error-handling middleware
 app.use((err, req, res, next) => {
