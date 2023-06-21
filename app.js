@@ -7,6 +7,8 @@ const wishlistRoutes = require('./Routes/wishlistRoutes.js');
 const categoryRoutes = require('./Routes/categoryRoutes.js');
 const reviewRoutes = require('./Routes/reviewRoutes.js');
 
+require('dotenv').config();
+
 
 const port = 3000;
 const app = express();

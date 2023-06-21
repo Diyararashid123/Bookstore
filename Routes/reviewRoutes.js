@@ -1,5 +1,7 @@
     // viewRouter.js
     const express = require('express');
+    require('dotenv').config();
+
     const { ClerkExpressWithAuth } = require ("@clerk/clerk-sdk-node");
     const cors = require('cors');
     const {
