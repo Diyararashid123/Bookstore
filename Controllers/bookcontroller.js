@@ -2,9 +2,10 @@
 
     const { PrismaClient } = require('@prisma/client');
     const prisma = new PrismaClient();
+    const maxbooksnum = require('../store.js');
 
     const getAllBooks = async (req, res) => {
-      const { page = 1, limit = 10, sortBy } = req.query;
+      const {page = 1, sortBy } = req.query; 
     
       const sortOptions = {
         mostPopular: { totalSold: 'desc' },
@@ -17,7 +18,7 @@
     
       try {
         const totalCount = await prisma.book.count();
-        const totalPages = Math.ceil(totalCount / limit);
+        const totalPages = Math.ceil(totalCount / maxbooksnum);
     
         const books = await prisma.book.findMany({
           include: {
@@ -27,8 +28,8 @@
               },
             },
           },
-          take: parseInt(limit),
-          skip: (parseInt(page) - 1) * parseInt(limit),
+          take: parseInt(maxbooksnum),
+          skip: (parseInt(page) - 1) * parseInt(maxbooksnum),
           orderBy,
         });
     
@@ -44,17 +45,12 @@
       }
     };
 
-
-
-    
     const getBookRecommendations = async (req, res) => {
-      const { userId, limit } = req.query;
+      const { userId, page = 1, limit } = req.query;
     
-      // Convert limit string to number
       const limitNumber = limit ? Number(limit) : 5; // If no limit is provided, default to 5
     
       try {
-        // Fetch user interactions
         const userInteractions = await prisma.interaction.findMany({
           where: {
             clerkId: userId
@@ -68,7 +64,6 @@
           }
         });
     
-        // Determine the most interacted categories
         let categoryCount = {};
         for (let interaction of userInteractions) {
           for (let category of interaction.book.category) {
@@ -80,7 +75,6 @@
           }
         }
     
-        // Get the category with maximum interactions
         let maxCount = 0;
         let maxCategory;
         for (let category in categoryCount) {
@@ -90,8 +84,7 @@
           }
         }
     
-        // Fetch books in the most interacted category
-        const recommendedBooks = await prisma.book.findMany({
+        const totalCount = await prisma.book.count({
           where: {
             category: {
               some: {
@@ -103,16 +96,36 @@
               notIn: userInteractions.map(interaction => interaction.bookId)
             }
           },
-          take: limitNumber, // Use the limit provided by the frontend
+        });
+        const totalPages = Math.ceil(totalCount / limitNumber);
+    
+        const recommendedBooks = await prisma.book.findMany({
+          where: {
+            category: {
+              some: {
+                id: parseInt(maxCategory)
+              }
+            },
+            id: {
+              notIn: userInteractions.map(interaction => interaction.bookId)
+            }
+          },
+          take: limitNumber,
+          skip: (parseInt(page) - 1) * limitNumber,
         });
     
-        res.status(200).json(recommendedBooks);
+        res.status(200).json({
+          recommendedBooks,
+          totalPages,
+          currentPage: parseInt(page),
+          totalCount,
+        });
       } catch (error) {
         console.error('Error details:', error);
         res.status(500).json({ error: 'An error occurred while fetching book recommendations' });
       }
     };
-
+    
     
     
     const getBookById = async (req, res) => {
@@ -253,12 +266,23 @@
     }
   };
 
-
   const getPurchaseHistory = async (req, res) => {
-    const { userId } = req.params;
-    
+    const { userId, page = 1, limit } = req.query;
+  
+    const limitNumber = limit ? Number(limit) : 5; // If no limit is provided, default to 5
+  
     try {
-      // Find purchases made by the user
+      const totalCount = await prisma.purchase.count({
+        where: {
+          user: {
+            some: {
+              clerkId: userId
+            }
+          }
+        },
+      });
+      const totalPages = Math.ceil(totalCount / limitNumber);
+  
       const purchases = await prisma.purchase.findMany({
         where: {
           user: {
@@ -270,18 +294,26 @@
         include: {
           book: true
         },
+        take: limitNumber,
+        skip: (parseInt(page) - 1) * limitNumber,
       });
   
       if(purchases.length === 0) {
         return res.status(404).json({ message: 'No purchases found for this user' });
       }
   
-      res.status(200).json(purchases);
+      res.status(200).json({
+        purchases,
+        totalPages,
+        currentPage: parseInt(page),
+        totalCount,
+      });
     } catch (error) {
       console.error('Error details:', error);
       res.status(500).json({ error: 'An error occurred while fetching the purchase history' });
     }
   };
+  
   
 
     const updateBook = async (req, res) => {
@@ -309,60 +341,80 @@
       }
 
     };
-    
     const searchBooks = async (req, res) => {
-    let { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy } = req.query;
-
-    // Helper function to normalize book titles and search inputs
-    function normalize(input) {
-      return input.replace(/[-\s]/g, '').toLowerCase();
-    }
-
-    // Normalize the search query
-    searchQuery = normalize(searchQuery);
-
-    // Convert categories string to an array
-    const categoryArray = categories ? categories.split(',') : null;
-
-    // Prepare sorting options
-    const orderBy = {};
-    if (sortBy) {
-      orderBy[sortBy] = 'desc';
-    }
-
-    try {
-      const books = await prisma.book.findMany({
-        where: {
-          AND: [
-            {
-              OR: [
-                
-                { title: { contains: searchQuery, mode: 'insensitive' } },
-                
-              ],
-            },
-            categoryArray && { categoryId: { in: categoryArray } },
-            minPrice && { price: { gte: parseFloat(minPrice) } },
-            maxPrice && { price: { lte: parseFloat(maxPrice) } },
-            startDate && { publicationDate: { gte: new Date(startDate) } },
-            endDate && { publicationDate: { lte: new Date(endDate) } },
-          ].filter(Boolean),
-        },
-        orderBy,
-      });
-
-      // Filter books where the normalized title includes the normalized search input
-      const matchingBooks = books.filter(book => normalize(book.title).includes(searchQuery));
-
-      res.status(200).json(matchingBooks);
-    } catch (error) {
-      res.status(500).json({ error: 'An error occurred while searching for books' });
-    }
-  };
+      let { searchQuery, categories, minPrice, maxPrice, startDate, endDate, sortBy, page = 1, limit } = req.query;
+    
+      const limitNumber = limit ? Number(limit) : 5; // If no limit is provided, default to 5
+    
+      function normalize(input) {
+        return input.replace(/[-\s]/g, '').toLowerCase();
+      }
+    
+      searchQuery = normalize(searchQuery);
+    
+      const categoryArray = categories ? categories.split(',') : null;
+    
+      const orderBy = {};
+      if (sortBy) {
+        orderBy[sortBy] = 'desc';
+      }
+    
+      try {
+        const totalCount = await prisma.book.count({
+          where: {
+            AND: [
+              {
+                OR: [
+                  { title: { contains: searchQuery, mode: 'insensitive' } },
+                ],
+              },
+              categoryArray && { categoryId: { in: categoryArray } },
+              minPrice && { price: { gte: parseFloat(minPrice) } },
+              maxPrice && { price: { lte: parseFloat(maxPrice) } },
+              startDate && { publicationDate: { gte: new Date(startDate) } },
+              endDate && { publicationDate: { lte: new Date(endDate) } },
+            ].filter(Boolean),
+          },
+        });
+        const totalPages = Math.ceil(totalCount / limitNumber);
+    
+        const books = await prisma.book.findMany({
+          where: {
+            AND: [
+              {
+                OR: [
+                  { title: { contains: searchQuery, mode: 'insensitive' } },
+                ],
+              },
+              categoryArray && { categoryId: { in: categoryArray } },
+              minPrice && { price: { gte: parseFloat(minPrice) } },
+              maxPrice && { price: { lte: parseFloat(maxPrice) } },
+              startDate && { publicationDate: { gte: new Date(startDate) } },
+              endDate && { publicationDate: { lte: new Date(endDate) } },
+            ].filter(Boolean),
+          },
+          orderBy,
+          take: limitNumber,
+          skip: (parseInt(page) - 1) * limitNumber,
+        });
+    
+        const matchingBooks = books.filter(book => normalize(book.title).includes(searchQuery));
+    
+        res.status(200).json({
+          matchingBooks,
+          totalPages,
+          currentPage: parseInt(page),
+          totalCount,
+        });
+      } catch (error) {
+        res.status(500).json({ error: 'An error occurred while searching for books' });
+      }
+    };
+    
 
     const getTopSellingBooks = async (req, res) => {
       try {
-        const { limit } = req.body;
+        const { limits } = req.body;
 
         const books = await prisma.book.findMany({
           where: {
@@ -370,9 +422,8 @@
               gt: 0 // Only include books where totalSold is greater than 0
             }
           },
-          take: parseInt(limit) || undefined,
+          take: parseInt(limits) || undefined,
           orderBy: {
-            
             totalSold: 'desc',
           },
         });
@@ -384,9 +435,9 @@
     
     const getMostPopularBooks = async (req, res) => {
       try {
-        const { limit } = req.query;
+        const { limits } = req.query;
         const books = await prisma.book.findMany({
-          take: parseInt(limit) || undefined,
+          take: parseInt(limits) || undefined,
           orderBy: {
             views: 'desc',
           },
@@ -399,9 +450,9 @@
     
     const getMostWishedBooks = async (req, res) => {
       try {
-        const { limit } = req.query;
+        const { limits } = req.query;
         const books = await prisma.book.findMany({
-          take: parseInt(limit) || undefined,
+          take: parseInt(limits) || undefined,
           orderBy: {
             wishlistCount: 'desc',
           },
@@ -414,9 +465,9 @@
     
     const getLatestReleasedBooks = async (req, res) => {
       try {
-        const { limit } = req.query;
+        const { limits } = req.query;
         const books = await prisma.book.findMany({
-          take: parseInt(limit) || undefined,
+          take: parseInt(limits) || undefined,
           orderBy: {
             releaseDate: 'desc',
           },
@@ -483,4 +534,4 @@
       }
     };
 
-    module.exports = { getAllBooks, createBook, updateBook, deleteBook, buyBook,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getBookById, getSimilarBooks, getBookRecommendations, getFeaturedBooks, getPurchaseHistory};
+    module.exports = { getAllBooks,searchBooks,getMostPopularBooks, getLatestReleasedBooks, getMostWishedBooks,getTopSellingBooks, getSimilarBooks, getBookRecommendations, getFeaturedBooks, getPurchaseHistory,getBookById,createBook, updateBook, deleteBook, buyBook};

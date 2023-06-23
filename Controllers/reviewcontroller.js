@@ -64,7 +64,11 @@ const deleteReview = async (req, res) => {
 };
 
 const getBookReviews = async (req, res) => {
-  const { id } = req.params;
+  const { page =1, id } = req.params;
+
+    
+
+
   try {
     const reviews = await prisma.review.findMany({
       where: {

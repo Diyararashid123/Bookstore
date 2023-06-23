@@ -23,7 +23,6 @@ const addToWishlist = async (req, res) => {
       data: {
         clerkId: user.clerkId,
         bookId: parseInt(bookId),
-       
       },
     });
     console.log(wishlistItem);
@@ -65,15 +64,22 @@ const removeFromWishlist = async (req, res) => {
 };
 
 
-
 const getWishlistByUserId = async (req, res) => {
-  const { userId } = req.params;
+  const { page = 1, limit = 10,userId } = req.params;
   try {
+    const totalCount = await prisma.book.count(); //41 2 11 
+    const totalPages = Math.ceil(totalCount / limit);
     const wishlistItems = await prisma.wishlist.findMany({
       where: { clerkId: parseInt(userId) },
       include: { book: true },
+      take: parseInt(limit),
+      skip: (parseInt(page) - 1) * parseInt(limit),
     });
-    res.status(200).json(wishlistItems);
+    res.status(200).json({
+      wishlistItems, 
+      totalPages,
+      currentPage: parseInt(page),
+      totalCount});
   } catch (error) {
     res.status(500).json({ error: 'Error fetching wishlist' });
   }
