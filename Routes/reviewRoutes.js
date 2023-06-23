@@ -7,6 +7,7 @@
       deleteReview, 
       getBookReviews
     } = require('../Controllers/reviewcontroller.js'); // Adjust the path 
+    require('dotenv').config();
 
     const router = express.Router();
     router.use(cors());
