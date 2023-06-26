@@ -65,7 +65,7 @@
       const limitNumber  = limit ? Number(limit) : 5; 
 
         // If user does not exist, return a 404 not found status
-        if (!user) {
+        if (!userId) {
           res.status(404).json({ error: 'User not found' });
           return;
         }
