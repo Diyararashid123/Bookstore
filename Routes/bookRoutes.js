@@ -1,5 +1,7 @@
   // bookRoutes.js
   const express = require('express');
+  const { ClerkExpressWithAuth } = require ("@clerk/clerk-sdk-node");
+  const cors = require('cors');
   const {
     getAllBooks,
     createBook,
@@ -19,11 +21,12 @@
   } = require('../Controllers/bookcontroller.js'); // Adjust the path 
 
   const router = express.Router();
+  router.use(cors());
 
   // Book-related routes
   router.get('/books', getAllBooks);
   router.get('/books/search', searchBooks);
-  router.post('/book/buy', buyBook);
+  router.post('/book/buy', ClerkExpressWithAuth(), buyBook);
   router.post('/book/create', createBook);
   router.put('/book/update/:id', updateBook);
   router.delete('/book/delete/:id', deleteBook);
@@ -33,7 +36,7 @@
   router.get('/books/sell', getTopSellingBooks);
   router.get('/book/:id', getBookById);
   router.get('/books/similar/:id',getSimilarBooks);
-  router.get('/books/recommended',getBookRecommendations);
+  router.get('/books/recommended',ClerkExpressWithAuth(),getBookRecommendations);
   router.get('/books/featured',getFeaturedBooks);
-  router.get('/books/:id/purchases', getPurchaseHistory);
+  router.get('/books/:id/purchases', ClerkExpressWithAuth(),getPurchaseHistory);
   module.exports = router;

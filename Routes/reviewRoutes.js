@@ -11,9 +11,10 @@
 
     const router = express.Router();
     router.use(cors());
+    
     // Review-related routes
     router.post('/review/create', ClerkExpressWithAuth(), createReview);
     router.delete('/review/delete/:id', deleteReview);
-    router.get('/review/:id', getBookReviews);
+    router.get('/review/:id', ClerkExpressWithAuth(), getBookReviews);
 
     module.exports = router;
