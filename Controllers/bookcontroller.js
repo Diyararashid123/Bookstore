@@ -547,9 +547,9 @@ const getTopSellingBooks = async (req, res) => {
         }
       },
       // Use the limitNumber to determine the number of results to return
-      take: limitNumber,
+      take: maxbooksnum,
       // Skip results based on the current page number
-      skip: (pageNumber - 1) * maxbooksnum,
+      skip: ( parseInt(page) - 1) * maxbooksnum,
       // Order the results by totalSold in descending order
       orderBy: {
         totalSold: 'desc',
