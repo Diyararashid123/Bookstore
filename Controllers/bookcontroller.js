@@ -63,6 +63,16 @@
     
       // If no limit is provided, default to 5
       const limitNumber  = limit ? Number(limit) : 5; 
+
+        // If user does not exist, return a 404 not found status
+        if (!user) {
+          res.status(404).json({ error: 'User not found' });
+          return;
+        }
+
+
+
+
     
       try {
         // Fetch all interactions of the user with books
