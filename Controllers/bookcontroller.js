@@ -426,7 +426,7 @@
       res.status(204).send();
     } catch(error){
       // If the book does not exist, return a 404 not found status
-      res.status(404).json({error: "THE BOOK DOSE NOT EXIST"});
+      res.status(404).json({error: error});
     }
   };
 
