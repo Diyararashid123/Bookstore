@@ -63,15 +63,6 @@
     
       // If no limit is provided, default to 5
       const limitNumber  = limit ? Number(limit) : 5; 
-
-      // Get authorized user ID
-      const authUserId = req.auth.userId;
-
-      // Validate if the authenticated user and the user ID provided are the same
-      if(authUserId != userId) {
-        // If not the same, return unauthorized error
-        return res.status(401).json({ error: 'You cannot give a review as another user' });
-      }
     
       try {
         // Fetch all interactions of the user with books
