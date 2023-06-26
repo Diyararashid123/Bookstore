@@ -127,7 +127,7 @@
         });
     
         // Calculate the total pages
-        const totalPages = Math.ceil(totalCount / limitNumber);
+        const totalPages = Math.ceil(totalCount / maxbooksnum);
     
         // Fetch recommended books from the most interacted category
         const Books = await prisma.book.findMany({
@@ -142,8 +142,8 @@
               notIn: userInteractions.map(interaction => interaction.bookId)
             }
           },
-          take: limitNumber,
-          skip: (parseInt(page) - 1) * limitNumber,
+          take: maxbooksnum,
+          skip: (parseInt(page) - 1) * maxbooksnum,
         });
     
         // Send the result with a 200 status code
