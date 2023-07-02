@@ -1,6 +1,6 @@
   const { PrismaClient } = require('@prisma/client');
   const prisma = new PrismaClient();
-  const limit = require('../store.js');
+  const maxbooksnum = require('../store.js');
     
     // This function is responsible for creating a new category in the database.
 const createCategory = async (req, res) => {
@@ -66,7 +66,7 @@ const getCategoryWithBooks = async (req, res) => {
     const allBooks = Array.from(bookCountMap.entries())
       .filter(([_, count]) => count === names.length)
       .sort((a, b) => b[1] - a[1])
-      .map(([id, _]) => books.find(book => book.id === id));
+      .map(([id, _]) => Books.find(book => book.id === id));
 
     // Calculate the total count of books and the total number of pages.
     const totalCount = allBooks.length;
