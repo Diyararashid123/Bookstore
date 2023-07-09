@@ -1,6 +1,7 @@
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const maxbooksnum = require('../store.js');
 // This function is responsible for creating a new review.
 const createReview = async (req, res) => {
   // Destructure 'bookId', 'userId', 'rating' and 'comment' from the request body.
