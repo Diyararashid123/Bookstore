@@ -1,6 +1,7 @@
 const express = require('express');
 const { ClerkExpressWithAuth } = require ("@clerk/clerk-sdk-node");
-  const cors = require('cors');
+const cors = require('cors');
+require('dotenv').config();
 
 
 const {
