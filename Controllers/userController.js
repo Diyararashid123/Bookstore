@@ -52,7 +52,7 @@ const Cleark = async(req, res) => {
 // The 'createInteraction' function is an asynchronous function responsible for creating or updating user interactions with books in the database.
 const createInteraction = async (req, res) => {
   // The 'userId' and 'interactions' properties are extracted from the request body and renamed as 'clerkId' and 'interactions' respectively.
-  const { userId: clerkId, interactions } = req.body;
+  const { userId, interactions } = req.body;
 
   // The authenticated user's ID is extracted from the request object.
   const authUserId = req.auth.userId;
@@ -71,7 +71,7 @@ const createInteraction = async (req, res) => {
       // Attempt to find an interaction in the database where the 'clerkId' and 'bookId' match the provided values.
       let interaction = await prisma.interaction.findFirst({
         where: {
-          clerkId: clerkId,
+          clerkId: userId,
           bookId: bookId
         }
       });
@@ -92,7 +92,7 @@ const createInteraction = async (req, res) => {
         // If no interaction is found, create a new interaction in the database with the provided 'clerkId', 'bookId', and 'interactionsCount'.
         interaction = await prisma.interaction.create({
           data: {
-            clerkId: clerkId,
+            clerkId: userId,
             bookId: bookId,
             interactionsCount: interactionsCount
           }
