@@ -15,6 +15,6 @@
     // Review-related routes
     router.post('/review/create', ClerkExpressWithAuth(), createReview);
     router.delete('/review/delete/:id', deleteReview);
-    router.get('/review/:id', ClerkExpressWithAuth(), getBookReviews);
+    router.get('/review/:id', getBookReviews);
 
     module.exports = router;

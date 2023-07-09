@@ -38,5 +38,5 @@
   router.get('/books/similar/:id',getSimilarBooks);
   router.get('/books/recommended',getBookRecommendations);
   router.get('/books/featured',getFeaturedBooks);
-  router.get('/books/:id/purchases', ClerkExpressWithAuth(),getPurchaseHistory);
+  router.post('/purchases', ClerkExpressWithAuth(),getPurchaseHistory);
   module.exports = router;

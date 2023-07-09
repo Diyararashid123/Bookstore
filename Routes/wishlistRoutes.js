@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(cors());
 
 
-router.get("/wishlist", ClerkExpressWithAuth(),getWishlistByUserId);
+router.post("/wishlist", ClerkExpressWithAuth(),getWishlistByUserId);
 router.post('/wishlist/add', ClerkExpressWithAuth() ,addToWishlist);
 router.delete('/wishlist/remove', ClerkExpressWithAuth(),removeFromWishlist);
 module.exports = router;

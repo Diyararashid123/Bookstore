@@ -1,5 +1,4 @@
 
-
     const { PrismaClient } = require('@prisma/client');
     const prisma = new PrismaClient();
     const maxbooksnum = require('../store.js');
@@ -69,10 +68,6 @@
           res.status(404).json({ error: 'User not found' });
           return;
         }
-
-
-
-
     
       try {
         // Fetch all interactions of the user with books
@@ -167,7 +162,11 @@
           const { id } = req.params;
           try {
             // Attempt to find the book in the database using the provided ID
-            const book = await prisma.book.findUnique({ where: { id: parseInt(id) } });
+            const book = await prisma.book.findUnique({ 
+              where: { id: parseInt(id)}, 
+              include:{category:true} 
+              } 
+              );
             if (book) {
               // If book is found, return it with a 200 status code
               res.status(200).json(book);
@@ -177,7 +176,7 @@
             }
           } catch (error) {
             // If an error occurs (such as providing a non-existing ID), return a 500 status code with an error message
-            res.status(500).json({ error: "BOOK ID DOES NOT EXIST" });
+            res.status(500).json({ error: "Book not found" });
           }
         };
     
@@ -325,7 +324,8 @@
   // Function to get the purchase history of a user
   const getPurchaseHistory = async (req, res) => {
     // Destructure user id, page number, and limit from request query
-    const { userId, page = 1, limit } = req.query;
+    const { page = 1, limit } = req.query;
+    const {userId} = req.body;
 
     // Extract user ID from the authentication token
     const authUserId = req.auth.userId;
@@ -333,7 +333,7 @@
     // Check if the authenticated user is the same as the user trying to view purchase history
     if(authUserId != userId) {
       // If not, return a 401 unauthorized status
-      return res.status(401).json({ error: 'You cannot view the purchase history of another user' });
+      return res.status(401).json({ error: 'Unauthorized Request.' });
     }
   
     // If no limit is provided, default to 5
@@ -371,12 +371,12 @@
   
       // If there are no purchases found, return a 404 not found status
       if(Books.length === 0) {
-        return res.status(404).json({ message: 'No purchases found for this user' });
+        return res.status(404).json({ message: 'No purchases found.' });
       }
   
       // Return the purchases
       res.status(200).json({
-        Books,
+        books:Books.map((item)=>item.book[0]),
         totalPages,
         currentPage: parseInt(page),
         totalCount,

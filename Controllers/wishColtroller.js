@@ -38,11 +38,8 @@ const addToWishlist = async (req, res) => {
       },
     });
     
-    // The newly created wishlist item is logged to the console.
-    console.log(wishlistItem);
-    
     // The newly created wishlist item is returned as the response.
-    res.status(201).json(wishlistItem);
+    res.status(201).json({success:"Book added to wishlist."});
   } catch (error) {
     // If an error occurs while trying to execute the 'try' block, it is caught here.
     // Log the error to the console and return an error message.
@@ -89,7 +86,7 @@ const removeFromWishlist = async (req, res) => {
     await prisma.wishlist.delete({ where: { id: parseInt(id) } });
     
     // A 204 No Content status code is returned as the response, indicating that the operation was successful and that there is no additional content to send in the response payload body.
-    res.status(204).send();
+    res.status(204).json({success:"Book removed from wishlist."});
   } catch (error) {
     // If an error occurs while trying to execute the 'try' block, it is caught here.
     // The error message 'Error removing book from wishlist' is returned as the response.
@@ -102,7 +99,8 @@ const removeFromWishlist = async (req, res) => {
 // The 'getWishlistByUserId' function is an asynchronous function that retrieves a user's wishlist from the database.
 const getWishlistByUserId = async (req, res) => {
   // The 'page', 'limit', and 'userId' properties are extracted from the request parameters.
-  const { page = 1, limit = 10,userId } = req.params;
+  const { page = 1, limit = 10 } = req.params;
+  const {userId} = req.body;
 
   // The authenticated user's ID is extracted from the request object.
   const authUserId = req.auth.userId;
@@ -122,7 +120,7 @@ const getWishlistByUserId = async (req, res) => {
     // The wishlist items for the user with the provided 'userId' are retrieved from the database.
     // This includes the associated book data.
     const Books = await prisma.wishlist.findMany({
-      where: { clerkId: parseInt(userId) },
+      where: { clerkId: userId },
       include: { book: true },
       take: parseInt(limit),
       skip: (parseInt(page) - 1) * parseInt(limit),
@@ -130,13 +128,14 @@ const getWishlistByUserId = async (req, res) => {
 
     // The wishlist items, total pages, current page, and total count are returned as the response.
     res.status(200).json({
-      Books, 
+      Books: Books.map((item)=>item.book), 
       totalPages,
       currentPage: parseInt(page),
       totalCount});
   } catch (error) {
     // If an error occurs while trying to execute the 'try' block, it is caught here.
     // The error message 'Error fetching wishlist' is returned as the response.
+    console.log(error)
     res.status(500).json({ error: 'Error fetching wishlist' });
   }
 };

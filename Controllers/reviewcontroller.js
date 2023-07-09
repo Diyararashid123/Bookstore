@@ -46,7 +46,7 @@ const createReview = async (req, res) => {
     });
 
     // Return a 201 Created response along with the newly created review.
-    res.status(201).json(review);
+    res.status(201).json("Review created successfully.");
   } catch (error) { // If an error occurs while trying to execute the try block, it is caught here.
 
     // Log the error to the console and return a 500 Internal Server Error response.
