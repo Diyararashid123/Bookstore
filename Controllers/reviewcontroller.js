@@ -80,13 +80,6 @@ const deleteReview = async (req, res) => {
 const getBookReviews = async (req, res) => {
   // 'page' and 'id' are extracted from the request parameters. The default value for 'page' is 1.
   const { page = 1, id } = req.params;
-
-  const authUserId = req.auth.userId;
-
-  if(authUserId != userId) {
-    // If the authenticated user's ID doesn't match the user's ID in request, return an authorization error.
-    return res.status(401).json({ error: 'You cannot give a review as another user' });
-  }
   
   try {
     // Count the total number of reviews for the specific book.
