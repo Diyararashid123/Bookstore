@@ -14,7 +14,7 @@ const addToWishlist = async (req, res) => {
 
   // If the authenticated user's ID does not match the user ID provided in the request body, an error is returned.
   if(authUserId != userId) {
-    return res.status(401).json({ error: 'You cannot give a review as another user' });
+    return res.status(401).json({ error: 'Unauthorized Request.' });
   }
 
   // A user is retrieved from the database where the 'clerkId' matches the provided 'userId'.
@@ -58,7 +58,7 @@ const removeFromWishlist = async (req, res) => {
 
   // If the authenticated user's ID does not match the user ID provided in the request parameters, an error is returned.
   if(authUserId != userId) {
-    return res.status(401).json({ error: 'You cannot give a review as another user' });
+    return res.status(401).json({ error: 'Unauthorized Request.' });
   }
 
   // A user is retrieved from the database where the 'clerkId' matches the provided 'userId'.
@@ -107,7 +107,7 @@ const getWishlistByUserId = async (req, res) => {
 
   // If the authenticated user's ID does not match the user ID provided in the request parameters, an error is returned.
   if(authUserId != userId) {
-    return res.status(401).json({ error: 'You cannot give a review as another user' });
+    return res.status(401).json({ error: 'Unauthorized Request.' });
   }
 
   try {

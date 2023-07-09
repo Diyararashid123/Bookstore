@@ -12,7 +12,7 @@ const createReview = async (req, res) => {
   // Check if the authenticated user is the same as the user who is supposed to create the review.
   // If not, return a 401 Unauthorized response.
   if(authUserId != userId) {
-    return res.status(401).json({ error: 'You cannot give a review as another user' });
+    return res.status(401).json({ error: 'Unauthorized Request.' });
   }
 
   // Validate the rating to ensure it's between 1 and 5. If not, return a 400 Bad Request response.

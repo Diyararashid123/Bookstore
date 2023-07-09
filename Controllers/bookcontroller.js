@@ -191,7 +191,7 @@
       // Check if the authenticated user is the same as the user making the purchase
       if(authUserId != userId) {
         // If not, return a 401 unauthorized status
-        return res.status(401).json({ error: 'You cannot give a review as another user' });
+        return res.status(401).json({ error: 'Unauthorized Request.' });
       }
     
       try {
