@@ -112,7 +112,15 @@ const getWishlistByUserId = async (req, res) => {
 
   try {
     // The total count of books in the database is retrieved.
-    const totalCount = await prisma.book.count(); 
+      const totalCount = await prisma.purchase.count({
+        where: {
+          user: {
+            some: {
+              clerkId: userId
+            }
+          }
+        },
+      });
     
     // The total number of pages is calculated by dividing the total count by the limit and rounding up to the nearest whole number.
     const totalPages = Math.ceil(totalCount / limit);
