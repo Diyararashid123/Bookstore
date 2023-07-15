@@ -369,11 +369,6 @@
         skip: (parseInt(page) - 1) * maxbooksnum,
       });
   
-      // If there are no purchases found, return a 404 not found status
-      if(Books.length === 0) {
-        return res.status(404).json({ message: 'No purchases found.' });
-      }
-  
       // Return the purchases
       res.status(200).json({
         books:Books.map((item)=>item.book[0]),
