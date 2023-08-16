@@ -51,7 +51,7 @@ const addToWishlist = async (req, res) => {
 // The 'removeFromWishlist' function is an asynchronous function that removes a book from a user's wishlist in the database.
 const removeFromWishlist = async (req, res) => {
   // The 'userId' and 'id' properties are extracted from the request parameters.
-  const {userId, id} = req.params;
+  const {userId, id} = req.body;
 
   // The authenticated user's ID is extracted from the request object.
   const authUserId = req.auth.userId;
