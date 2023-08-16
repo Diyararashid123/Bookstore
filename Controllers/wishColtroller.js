@@ -31,13 +31,12 @@ const addToWishlist = async (req, res) => {
 
   try {
     // A new wishlist item is created in the database with the retrieved 'clerkId' and provided 'bookId'.
-    const wishlistItem = await prisma.wishlist.create({
+    await prisma.wishlist.create({
       data: {
         clerkId: user.clerkId,
         bookId: parseInt(bookId),
       },
     });
-    
     // The newly created wishlist item is returned as the response.
     res.status(201).json({success:"Book added to wishlist."});
   } catch (error) {
@@ -75,15 +74,20 @@ const removeFromWishlist = async (req, res) => {
 
   try {
     // The wishlist item with the provided 'id' is retrieved from the database.
-    const wishlistItem = await prisma.wishlist.findUnique({ where: { id: parseInt(id) } });
-
-    // If the 'userId' property of the wishlist item does not match the 'id' of the user, an error is returned.
-    if(wishlistItem.userId !== user.id){
-      return res.status(403).json({ error: 'This book does not belong to the user\'s wishlist' });
-    }
-
+    const wishlistItem = await prisma.wishlist.findUnique({
+      where: {
+        clerkBookId: {
+          bookId: parseInt(id),
+          clerkId: user.clerkId
+        }
+      }
+    });
     // The wishlist item with the provided 'id' is deleted from the database.
-    await prisma.wishlist.delete({ where: { id: parseInt(id) } });
+    await prisma.wishlist.delete({
+      where:{
+        id: wishlistItem.id
+      }
+    });
     
     // A 204 No Content status code is returned as the response, indicating that the operation was successful and that there is no additional content to send in the response payload body.
     res.status(204).json({success:"Book removed from wishlist."});
