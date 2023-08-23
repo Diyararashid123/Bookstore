@@ -121,12 +121,12 @@ const getBookReviews = async (req, res) => {
     }));
 
     // Calculate the average rating of the reviews.
-    const Books = 
+    const averageRating = 
       reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length;
 
     // Send the reviews data, the average rating, the total pages, the current page number, and the total count of reviews in the response.
     res.status(200).json({ 
-      Books, 
+      averageRating, 
       reviews: reviewsWithUsername,
       totalPages,
       currentPage: parseInt(page),
