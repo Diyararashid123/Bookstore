@@ -76,6 +76,8 @@ model Wishlist {
   bookId             Int
   userId               User     @relation(fields: [clerkId], references: [clerkId])
   book               Book     @relation(fields: [bookId], references: [id])
+
+  @@unique(fields: [clerkId, bookId], name: "clerkBookId")
 }
 
 
